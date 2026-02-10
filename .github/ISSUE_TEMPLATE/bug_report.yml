@@ -1,0 +1,70 @@
+name: Bug report
+description: Report a reproducible bug in GitPhone
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug report. Please provide enough detail for us to reproduce and triage.
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: macOS version, Xcode version, and iOS Simulator/device used
+      placeholder: macOS 15.x, Xcode 16.x, iPhone 16 Simulator
+    validations:
+      required: true
+
+  - type: input
+    id: app_commit
+    attributes:
+      label: Commit or version
+      description: Git commit SHA or release tag
+      placeholder: main@abcdef1
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open app
+        2. Add repo ...
+        3. Tap Sync ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and screenshots
+      description: Redact sensitive content before sharing
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues before opening this report.
+          required: true
+        - label: I removed secrets/private data from logs and attachments.
+          required: true

@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Build (iOS Simulator)
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project GitPhone.xcodeproj \
+            -scheme GitPhone \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath .derived-local \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Resolve an available iPhone simulator
+        run: |
+          set -euo pipefail
+          SIM_ID=$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ {print $2; exit}')
+          if [ -z "${SIM_ID:-}" ]; then
+            echo "No available iPhone simulator found"
+            exit 1
+          fi
+          echo "SIM_ID=$SIM_ID" >> "$GITHUB_ENV"
+          echo "Using simulator id: $SIM_ID"
+
+      - name: Unit tests
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project GitPhone.xcodeproj \
+            -scheme GitPhone \
+            -destination "id=$SIM_ID" \
+            -derivedDataPath .derived-local \
+            -only-testing:GitPhoneTests \
+            CODE_SIGNING_ALLOWED=NO \
+            test

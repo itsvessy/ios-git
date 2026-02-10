@@ -1,4 +1,0 @@
-module libgit2 {
-umbrella "/Users/vessy/ios-git/.derived-local/SourcePackages/checkouts/libgit2/include"
-export *
-}

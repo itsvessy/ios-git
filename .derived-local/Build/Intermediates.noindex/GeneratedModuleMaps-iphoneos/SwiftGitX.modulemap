@@ -1,4 +1,0 @@
-module SwiftGitX {
-header "SwiftGitX-Swift.h"
-export *
-}

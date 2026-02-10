@@ -1,4 +1,0 @@
-framework module Storage {
-  header "Storage-Swift.h"
-  requires objc
-}

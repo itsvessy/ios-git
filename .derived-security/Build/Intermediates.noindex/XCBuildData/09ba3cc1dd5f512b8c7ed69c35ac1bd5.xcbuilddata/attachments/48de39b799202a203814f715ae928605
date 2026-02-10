@@ -1,4 +1,0 @@
-framework module SecurityEngine {
-  header "SecurityEngine-Swift.h"
-  requires objc
-}

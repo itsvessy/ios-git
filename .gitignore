@@ -60,3 +60,13 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# Project-specific local build artifacts
+.derived*/
+DerivedData/
+build/
+*.xcresult
+*.xcuserstate
+
+# macOS filesystem metadata
+.DS_Store

@@ -151,6 +151,70 @@ public struct SyncResult: Sendable {
     }
 }
 
+public struct RepoCommitIdentity: Codable, Sendable, Equatable {
+    public var name: String
+    public var email: String
+
+    public init(name: String, email: String) {
+        self.name = name
+        self.email = email
+    }
+}
+
+public enum RepoLocalChangeKind: String, Codable, Sendable {
+    case added
+    case modified
+    case deleted
+    case renamed
+    case typeChanged
+    case conflicted
+    case unknown
+}
+
+public enum RepoLocalChangeStageState: String, Codable, Sendable {
+    case staged
+    case unstaged
+    case both
+}
+
+public struct RepoLocalChange: Codable, Sendable, Identifiable {
+    public var path: String
+    public var kind: RepoLocalChangeKind
+    public var stageState: RepoLocalChangeStageState
+
+    public var id: String { path }
+
+    public init(path: String, kind: RepoLocalChangeKind, stageState: RepoLocalChangeStageState) {
+        self.path = path
+        self.kind = kind
+        self.stageState = stageState
+    }
+}
+
+public struct RepoCommitResult: Sendable {
+    public var commitID: String
+    public var message: String
+    public var committedAt: Date
+
+    public init(commitID: String, message: String, committedAt: Date = Date()) {
+        self.commitID = commitID
+        self.message = message
+        self.committedAt = committedAt
+    }
+}
+
+public struct RepoPushResult: Sendable {
+    public var remoteName: String
+    public var branchName: String
+    public var pushedAt: Date
+
+    public init(remoteName: String, branchName: String, pushedAt: Date = Date()) {
+        self.remoteName = remoteName
+        self.branchName = branchName
+        self.pushedAt = pushedAt
+    }
+}
+
 public struct RemoteProbeResult: Sendable {
     public var host: String
     public var port: Int
@@ -186,6 +250,15 @@ public protocol GitClient: Sendable {
     func clone(_ request: CloneRequest) async throws -> RepoRecord
     func sync(_ repo: RepoRecord, trigger: SyncTrigger) async throws -> SyncResult
     func probeRemote(_ remoteURL: String) async throws -> RemoteProbeResult
+    func listLocalChanges(_ repo: RepoRecord) async throws -> [RepoLocalChange]
+    func stage(_ repo: RepoRecord, paths: [String]) async throws
+    func stageAll(_ repo: RepoRecord) async throws
+    func loadCommitIdentity(_ repo: RepoRecord) async throws -> RepoCommitIdentity?
+    func saveCommitIdentity(_ identity: RepoCommitIdentity, for repo: RepoRecord) async throws
+    func commit(_ repo: RepoRecord, message: String) async throws -> RepoCommitResult
+    func push(_ repo: RepoRecord) async throws -> RepoPushResult
+    func discardLocalChanges(_ repo: RepoRecord) async throws
+    func resetToRemote(_ repo: RepoRecord) async throws -> SyncResult
 }
 
 public protocol HostTrustEvaluator: Sendable {
@@ -207,6 +280,10 @@ public enum RepoError: LocalizedError, Sendable {
     case keychainFailure(String)
     case syncBlocked(String)
     case ioFailure(String)
+    case invalidCommitMessage
+    case commitIdentityMissing
+    case nothingToCommit
+    case nothingToStage
 
     public var errorDescription: String? {
         switch self {
@@ -230,6 +307,14 @@ public enum RepoError: LocalizedError, Sendable {
             return "Sync blocked: \(message)"
         case let .ioFailure(message):
             return "File error: \(message)"
+        case .invalidCommitMessage:
+            return "Commit message is required."
+        case .commitIdentityMissing:
+            return "Commit identity is missing. Set name and email first."
+        case .nothingToCommit:
+            return "No staged changes to commit."
+        case .nothingToStage:
+            return "No local changes to stage."
         }
     }
 }

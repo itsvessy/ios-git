@@ -15,15 +15,18 @@ public actor FileSystemGitClient: GitClient {
     private let fileManager: FileManager
     private let trustEvaluator: HostTrustEvaluator
     private let credentialProvider: SSHCredentialProvider
+    private let operationLock: RepoOperationLock
 
     public init(
         fileManager: FileManager = .default,
         trustEvaluator: HostTrustEvaluator,
-        credentialProvider: SSHCredentialProvider = NullCredentialProvider()
+        credentialProvider: SSHCredentialProvider = NullCredentialProvider(),
+        operationLock: RepoOperationLock = RepoOperationLock()
     ) {
         self.fileManager = fileManager
         self.trustEvaluator = trustEvaluator
         self.credentialProvider = credentialProvider
+        self.operationLock = operationLock
     }
 
     public func probeRemote(_ remoteURL: String) async throws -> RemoteProbeResult {
@@ -92,31 +95,115 @@ public actor FileSystemGitClient: GitClient {
     }
 
     public func sync(_ repo: RepoRecord, trigger: SyncTrigger) async throws -> SyncResult {
+        try await withRepoLock(repo.id) {
+            try await self.syncUnlocked(repo, trigger: trigger)
+        }
+    }
+
+    public func listLocalChanges(_ repo: RepoRecord) async throws -> [RepoLocalChange] {
+        do {
+            return try await withRepositoryAccess(repo) { repository, _ in
+                let statuses = try repository.status()
+                return self.makeLocalChanges(from: statuses)
+            }
+        } catch let error as SwiftGitXError {
+            throw map(error: error)
+        }
+    }
+
+    public func stage(_ repo: RepoRecord, paths: [String]) async throws {
+        try await withRepoLock(repo.id) {
+            try await self.stageUnlocked(repo, paths: paths)
+        }
+    }
+
+    public func stageAll(_ repo: RepoRecord) async throws {
+        try await withRepoLock(repo.id) {
+            try await self.stageAllUnlocked(repo)
+        }
+    }
+
+    public func loadCommitIdentity(_ repo: RepoRecord) async throws -> RepoCommitIdentity? {
+        do {
+            return try await withRepositoryAccess(repo) { repository, _ in
+                try self.loadCommitIdentity(from: repository)
+            }
+        } catch let error as SwiftGitXError {
+            throw map(error: error)
+        }
+    }
+
+    public func saveCommitIdentity(_ identity: RepoCommitIdentity, for repo: RepoRecord) async throws {
+        try await withRepoLock(repo.id) {
+            try await self.saveCommitIdentityUnlocked(identity, for: repo)
+        }
+    }
+
+    public func commit(_ repo: RepoRecord, message: String) async throws -> RepoCommitResult {
+        try await withRepoLock(repo.id) {
+            try await self.commitUnlocked(repo, message: message)
+        }
+    }
+
+    public func push(_ repo: RepoRecord) async throws -> RepoPushResult {
+        try await withRepoLock(repo.id) {
+            try await self.pushUnlocked(repo)
+        }
+    }
+
+    public func discardLocalChanges(_ repo: RepoRecord) async throws {
+        try await withRepoLock(repo.id) {
+            try await self.discardLocalChangesUnlocked(repo)
+        }
+    }
+
+    public func resetToRemote(_ repo: RepoRecord) async throws -> SyncResult {
+        try await withRepoLock(repo.id) {
+            try await self.resetToRemoteUnlocked(repo)
+        }
+    }
+
+    private func withRepoLock<T>(
+        _ repoID: RepoID,
+        operation: () async throws -> T
+    ) async throws -> T {
+        await operationLock.lock(repoID: repoID)
+        do {
+            let result = try await operation()
+            await operationLock.unlock(repoID: repoID)
+            return result
+        } catch {
+            await operationLock.unlock(repoID: repoID)
+            throw error
+        }
+    }
+
+    private func syncUnlocked(_ repo: RepoRecord, trigger: SyncTrigger) async throws -> SyncResult {
         return try await withSecurityScopedAccess(
             directoryURL: URL(fileURLWithPath: repo.localPath, isDirectory: true),
             bookmarkData: repo.securityScopedBookmark
         ) { repositoryURL in
-            guard fileManager.fileExists(atPath: repositoryURL.path) else {
+            guard self.fileManager.fileExists(atPath: repositoryURL.path) else {
                 return SyncResult(state: .failed, message: "Repository directory missing.")
             }
 
             if trigger == .background {
                 let deferMarker = repositoryURL.appendingPathComponent(".gitphone-defer-background")
-                if fileManager.fileExists(atPath: deferMarker.path) {
+                if self.fileManager.fileExists(atPath: deferMarker.path) {
                     return SyncResult(state: .networkDeferred, message: "Background sync deferred by policy.")
                 }
             }
 
             let parsed = try SSHRemoteURL(parse: repo.remoteURL)
-            try await evaluateHostTrust(parsed)
+            try await self.evaluateHostTrust(parsed)
 
-            let credential = try await credentialProvider.credential(for: parsed.host, username: parsed.user)
+            let credential = try await self.credentialProvider.credential(for: parsed.host, username: parsed.user)
 
             do {
-                return try await withSSHAuthentication(credential: credential) { authentication in
+                return try await self.withSSHAuthentication(credential: credential) { authentication in
                     let repository = try Repository.open(at: repositoryURL)
 
-                    if try hasWorkingTreeChanges(repository) {
+                    if try self.hasWorkingTreeChanges(repository) {
                         throw RepoError.dirtyWorkingTree
                     }
 
@@ -124,12 +211,402 @@ public actor FileSystemGitClient: GitClient {
                         remote: repository.remote["origin"],
                         authentication: authentication
                     )
-                    return try fastForwardPull(repository: repository, trackedBranch: repo.trackedBranch)
+                    return try self.fastForwardPull(repository: repository, trackedBranch: repo.trackedBranch)
                 }
             } catch let error as SwiftGitXError {
-                throw map(error: error)
+                throw self.map(error: error)
             }
         }
+    }
+
+    private func stageUnlocked(_ repo: RepoRecord, paths: [String]) async throws {
+        let trimmedPaths = paths
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+
+        guard !trimmedPaths.isEmpty else {
+            throw RepoError.nothingToStage
+        }
+
+        do {
+            try await withRepositoryAccess(repo) { repository, _ in
+                try self.stagePaths(in: repository, paths: trimmedPaths)
+            }
+        } catch let error as SwiftGitXError {
+            throw map(error: error)
+        }
+    }
+
+    private func stageAllUnlocked(_ repo: RepoRecord) async throws {
+        do {
+            try await withRepositoryAccess(repo) { repository, _ in
+                let statuses = try repository.status()
+                let paths = self.makeLocalChanges(from: statuses).map(\.path)
+                guard !paths.isEmpty else {
+                    throw RepoError.nothingToStage
+                }
+                try self.stagePaths(in: repository, paths: paths)
+            }
+        } catch let error as SwiftGitXError {
+            throw map(error: error)
+        }
+    }
+
+    private func saveCommitIdentityUnlocked(_ identity: RepoCommitIdentity, for repo: RepoRecord) async throws {
+        let name = identity.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let email = identity.email.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty, !email.isEmpty else {
+            throw RepoError.commitIdentityMissing
+        }
+
+        do {
+            try await withRepositoryAccess(repo) { repository, _ in
+                try repository.config.set("user.name", to: name)
+                try repository.config.set("user.email", to: email)
+            }
+        } catch let error as SwiftGitXError {
+            throw map(error: error)
+        }
+    }
+
+    private func commitUnlocked(_ repo: RepoRecord, message: String) async throws -> RepoCommitResult {
+        let trimmedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedMessage.isEmpty else {
+            throw RepoError.invalidCommitMessage
+        }
+
+        do {
+            return try await withRepositoryAccess(repo) { repository, _ in
+                guard try self.loadCommitIdentity(from: repository) != nil else {
+                    throw RepoError.commitIdentityMissing
+                }
+
+                let statuses = try repository.status()
+                guard self.hasStagedChanges(statuses) else {
+                    throw RepoError.nothingToCommit
+                }
+
+                let committed = try repository.commit(message: trimmedMessage)
+                return RepoCommitResult(
+                    commitID: committed.id.hex,
+                    message: trimmedMessage,
+                    committedAt: Date()
+                )
+            }
+        } catch let error as SwiftGitXError {
+            throw map(error: error)
+        }
+    }
+
+    private func pushUnlocked(_ repo: RepoRecord) async throws -> RepoPushResult {
+        let parsed = try SSHRemoteURL(parse: repo.remoteURL)
+        try await evaluateHostTrust(parsed)
+        let credential = try await credentialProvider.credential(for: parsed.host, username: parsed.user)
+
+        do {
+            return try await withRepositoryAccess(repo) { repository, _ in
+                try await self.withSSHAuthentication(credential: credential) { authentication in
+                    try await repository.push(
+                        remote: repository.remote["origin"],
+                        authentication: authentication
+                    )
+                    let currentBranch = (try? repository.branch.current.name) ?? repo.trackedBranch
+                    return RepoPushResult(
+                        remoteName: "origin",
+                        branchName: currentBranch,
+                        pushedAt: Date()
+                    )
+                }
+            }
+        } catch let error as SwiftGitXError {
+            throw map(error: error)
+        }
+    }
+
+    private func discardLocalChangesUnlocked(_ repo: RepoRecord) async throws {
+        do {
+            try await withRepositoryAccess(repo) { repository, _ in
+                if let currentBranch = try? repository.branch.current,
+                   let headCommit = currentBranch.target as? Commit {
+                    try repository.reset(to: headCommit, mode: .hard)
+                } else if let headReference = try? repository.HEAD,
+                          let headCommit = headReference.target as? Commit {
+                    try repository.reset(to: headCommit, mode: .hard)
+                }
+
+                let statuses = try repository.status()
+                try self.removeUntrackedItems(in: repository, statuses: statuses)
+            }
+        } catch let error as SwiftGitXError {
+            throw map(error: error)
+        }
+    }
+
+    private func resetToRemoteUnlocked(_ repo: RepoRecord) async throws -> SyncResult {
+        let parsed = try SSHRemoteURL(parse: repo.remoteURL)
+        try await evaluateHostTrust(parsed)
+        let credential = try await credentialProvider.credential(for: parsed.host, username: parsed.user)
+
+        do {
+            return try await withRepositoryAccess(repo) { repository, _ in
+                try await self.withSSHAuthentication(credential: credential) { authentication in
+                    try await repository.fetch(
+                        remote: repository.remote["origin"],
+                        authentication: authentication
+                    )
+
+                    guard let remoteBranch = repository.branch["origin/\(repo.trackedBranch)", type: .remote] else {
+                        return SyncResult(
+                            state: .failed,
+                            message: "Remote branch origin/\(repo.trackedBranch) not found."
+                        )
+                    }
+
+                    if let localBranch = repository.branch[repo.trackedBranch, type: .local] {
+                        try repository.switch(to: localBranch)
+                    } else {
+                        try repository.switch(to: remoteBranch)
+                    }
+
+                    guard let remoteCommit = remoteBranch.target as? Commit else {
+                        return SyncResult(
+                            state: .failed,
+                            message: "Unable to resolve remote branch tip."
+                        )
+                    }
+
+                    try repository.reset(to: remoteCommit, mode: .hard)
+                    return SyncResult(
+                        state: .success,
+                        message: "Reset local branch to origin/\(repo.trackedBranch)."
+                    )
+                }
+            }
+        } catch let error as SwiftGitXError {
+            throw map(error: error)
+        }
+    }
+
+    private func withRepositoryAccess<T: Sendable>(
+        _ repo: RepoRecord,
+        operation: (Repository, URL) async throws -> T
+    ) async throws -> T {
+        try await withSecurityScopedAccess(
+            directoryURL: URL(fileURLWithPath: repo.localPath, isDirectory: true),
+            bookmarkData: repo.securityScopedBookmark
+        ) { repositoryURL in
+            guard self.fileManager.fileExists(atPath: repositoryURL.path) else {
+                throw RepoError.ioFailure("Repository directory missing.")
+            }
+
+            let repository: Repository
+            do {
+                repository = try Repository.open(at: repositoryURL)
+            } catch let error as SwiftGitXError {
+                throw self.map(error: error)
+            }
+
+            return try await operation(repository, repositoryURL)
+        }
+    }
+
+    private func loadCommitIdentity(from repository: Repository) throws -> RepoCommitIdentity? {
+        let name = try configStringIfPresent("user.name", in: repository)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let email = try configStringIfPresent("user.email", in: repository)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard let name, !name.isEmpty,
+              let email, !email.isEmpty else {
+            return nil
+        }
+
+        return RepoCommitIdentity(name: name, email: email)
+    }
+
+    private func configStringIfPresent(_ key: String, in repository: Repository) throws -> String? {
+        do {
+            return try repository.config.string(forKey: key)
+        } catch let error {
+            if error.code == .notFound {
+                return nil
+            }
+            throw error
+        }
+    }
+
+    private func stagePaths(in repository: Repository, paths: [String]) throws {
+        let uniquePaths = Array(Set(paths))
+            .sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+        guard !uniquePaths.isEmpty else {
+            throw RepoError.nothingToStage
+        }
+
+        let workingDirectory = try repository.workingDirectory
+        var existingPaths: [String] = []
+        var deletedPaths: [String] = []
+
+        for path in uniquePaths {
+            let fileURL = workingDirectory.appendingPathComponent(path)
+            if fileManager.fileExists(atPath: fileURL.path) {
+                existingPaths.append(path)
+            } else {
+                deletedPaths.append(path)
+            }
+        }
+
+        if !existingPaths.isEmpty {
+            try repository.add(paths: existingPaths)
+        }
+        for path in deletedPaths {
+            try? repository.remove(path: path)
+        }
+    }
+
+    private func hasStagedChanges(_ statuses: [StatusEntry]) -> Bool {
+        statuses.contains { entry in
+            entry.status.contains { status in
+                switch status {
+                case .indexNew, .indexModified, .indexDeleted, .indexRenamed, .indexTypeChange:
+                    return true
+                default:
+                    return false
+                }
+            }
+        }
+    }
+
+    private func removeUntrackedItems(in repository: Repository, statuses: [StatusEntry]) throws {
+        let untrackedPaths = Set(
+            statuses
+                .filter { $0.status.contains(.workingTreeNew) }
+                .compactMap { path(for: $0) }
+        )
+
+        let sortedPaths = untrackedPaths.sorted { lhs, rhs in
+            let lhsDepth = lhs.split(separator: "/").count
+            let rhsDepth = rhs.split(separator: "/").count
+            if lhsDepth == rhsDepth {
+                return lhs.count > rhs.count
+            }
+            return lhsDepth > rhsDepth
+        }
+
+        let workingDirectory = try repository.workingDirectory
+        for path in sortedPaths {
+            let itemURL = workingDirectory.appendingPathComponent(path)
+            guard fileManager.fileExists(atPath: itemURL.path) else {
+                continue
+            }
+            try fileManager.removeItem(at: itemURL)
+        }
+    }
+
+    private func makeLocalChanges(from statuses: [StatusEntry]) -> [RepoLocalChange] {
+        statuses.compactMap { entry in
+            guard let path = path(for: entry) else {
+                return nil
+            }
+
+            let relevantStatuses = entry.status.filter { status in
+                switch status {
+                case .current, .ignored:
+                    return false
+                default:
+                    return true
+                }
+            }
+
+            guard !relevantStatuses.isEmpty else {
+                return nil
+            }
+
+            return RepoLocalChange(
+                path: path,
+                kind: localChangeKind(for: relevantStatuses),
+                stageState: localChangeStageState(for: relevantStatuses)
+            )
+        }
+        .sorted { lhs, rhs in
+            lhs.path.localizedCaseInsensitiveCompare(rhs.path) == .orderedAscending
+        }
+    }
+
+    private func localChangeKind(for statuses: [StatusEntry.Status]) -> RepoLocalChangeKind {
+        if statuses.contains(.conflicted) {
+            return .conflicted
+        }
+        if statuses.contains(.indexRenamed) || statuses.contains(.workingTreeRenamed) {
+            return .renamed
+        }
+        if statuses.contains(.indexDeleted) || statuses.contains(.workingTreeDeleted) {
+            return .deleted
+        }
+        if statuses.contains(.indexNew) || statuses.contains(.workingTreeNew) {
+            return .added
+        }
+        if statuses.contains(.indexTypeChange) || statuses.contains(.workingTreeTypeChange) {
+            return .typeChanged
+        }
+        if statuses.contains(.indexModified) ||
+            statuses.contains(.workingTreeModified) ||
+            statuses.contains(.workingTreeUnreadable) {
+            return .modified
+        }
+        return .unknown
+    }
+
+    private func localChangeStageState(for statuses: [StatusEntry.Status]) -> RepoLocalChangeStageState {
+        let hasIndexState = statuses.contains { status in
+            switch status {
+            case .indexNew, .indexModified, .indexDeleted, .indexRenamed, .indexTypeChange:
+                return true
+            default:
+                return false
+            }
+        }
+
+        let hasWorktreeState = statuses.contains { status in
+            switch status {
+            case .workingTreeNew, .workingTreeModified, .workingTreeDeleted, .workingTreeRenamed,
+                    .workingTreeTypeChange, .workingTreeUnreadable:
+                return true
+            default:
+                return false
+            }
+        }
+
+        if statuses.contains(.conflicted) || (hasIndexState && hasWorktreeState) {
+            return .both
+        }
+        if hasIndexState {
+            return .staged
+        }
+        return .unstaged
+    }
+
+    private func path(for entry: StatusEntry) -> String? {
+        if let indexPath = deltaPath(entry.index), !indexPath.isEmpty {
+            return indexPath
+        }
+        if let workingTreePath = deltaPath(entry.workingTree), !workingTreePath.isEmpty {
+            return workingTreePath
+        }
+        return nil
+    }
+
+    private func deltaPath(_ delta: Diff.Delta?) -> String? {
+        guard let delta else {
+            return nil
+        }
+
+        if !delta.newFile.path.isEmpty {
+            return delta.newFile.path
+        }
+        if !delta.oldFile.path.isEmpty {
+            return delta.oldFile.path
+        }
+        return nil
     }
 
     private func checkoutTrackedBranchIfAvailable(repository: Repository, trackedBranch: String) throws {
@@ -418,6 +895,10 @@ public actor FileSystemGitClient: GitClient {
         switch error.code {
         case .auth:
             return .syncBlocked("SSH authentication failed. Verify repo access and ensure this app's public key is added on your Git host.")
+        case .uncommitted:
+            return .nothingToCommit
+        case .unchanged:
+            return .nothingToStage
         case .certificate:
             return .hostTrustRejected
         case .nonFastForward, .mergeConflict, .conflict:

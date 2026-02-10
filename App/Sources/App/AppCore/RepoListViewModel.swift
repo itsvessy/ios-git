@@ -18,6 +18,7 @@ final class RepoListViewModel: ObservableObject {
     @Published private(set) var sshKeys: [SSHKeyRecord] = []
     @Published private(set) var isAddingRepo = false
     @Published private(set) var syncingRepoIDs: Set<RepoID> = []
+    @Published private(set) var activeGitActionRepoIDs: Set<RepoID> = []
 
     @Published var searchQuery = ""
     @Published var sortMode: RepoSortMode = .name
@@ -103,6 +104,10 @@ final class RepoListViewModel: ObservableObject {
 
     func isSyncing(repoID: RepoID) -> Bool {
         syncingRepoIDs.contains(repoID)
+    }
+
+    func isGitActionInProgress(repoID: RepoID) -> Bool {
+        activeGitActionRepoIDs.contains(repoID)
     }
 
     func refresh() async {
@@ -230,31 +235,169 @@ final class RepoListViewModel: ObservableObject {
         }
     }
 
-    func discardLocalChanges(repo: RepoRecord) {
+    func loadLocalChanges(repo: RepoRecord) async -> [RepoLocalChange] {
         do {
-            try withRepoAccess(repo) { repoURL in
-                let marker = repoURL.appendingPathComponent(".gitphone-dirty")
-                if FileManager.default.fileExists(atPath: marker.path) {
-                    try FileManager.default.removeItem(at: marker)
-                }
-            }
-            publish("Local dirty marker cleared for \(repo.displayName).", kind: .success)
+            return try await gitClient.listLocalChanges(repo)
         } catch {
-            publish("Could not clear local dirty marker: \(error.localizedDescription)", kind: .error)
+            publish("Could not load local changes: \(error.localizedDescription)", kind: .error)
+            return []
         }
     }
 
-    func resolveDivergedByReset(repo: RepoRecord) {
+    func stage(repo: RepoRecord, paths: [String]) async -> Bool {
+        beginGitAction(for: repo.id)
+        defer { endGitAction(for: repo.id) }
+
         do {
-            try withRepoAccess(repo) { repoURL in
-                let marker = repoURL.appendingPathComponent(".gitphone-diverged")
-                if FileManager.default.fileExists(atPath: marker.path) {
-                    try FileManager.default.removeItem(at: marker)
-                }
-            }
-            publish("Diverged marker cleared for \(repo.displayName).", kind: .success)
+            try await gitClient.stage(repo, paths: paths)
+            publish("Staged selected changes.", kind: .success)
+            return true
         } catch {
-            publish("Could not clear diverged marker: \(error.localizedDescription)", kind: .error)
+            publish(error.localizedDescription, kind: .error)
+            return false
+        }
+    }
+
+    func stageAll(repo: RepoRecord) async -> Bool {
+        beginGitAction(for: repo.id)
+        defer { endGitAction(for: repo.id) }
+
+        do {
+            try await gitClient.stageAll(repo)
+            publish("Staged all local changes.", kind: .success)
+            return true
+        } catch {
+            publish(error.localizedDescription, kind: .error)
+            return false
+        }
+    }
+
+    func loadCommitIdentity(repo: RepoRecord) async -> RepoCommitIdentity? {
+        do {
+            return try await gitClient.loadCommitIdentity(repo)
+        } catch {
+            publish("Could not load commit identity: \(error.localizedDescription)", kind: .error)
+            return nil
+        }
+    }
+
+    func saveCommitIdentity(repo: RepoRecord, name: String, email: String) async -> Bool {
+        beginGitAction(for: repo.id)
+        defer { endGitAction(for: repo.id) }
+
+        do {
+            let identity = RepoCommitIdentity(name: name, email: email)
+            try await gitClient.saveCommitIdentity(identity, for: repo)
+            publish("Saved commit identity.", kind: .success)
+            return true
+        } catch {
+            publish(error.localizedDescription, kind: .error)
+            return false
+        }
+    }
+
+    func commit(repo: RepoRecord, message: String) async -> Bool {
+        let trimmedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedMessage.isEmpty else {
+            publish(RepoError.invalidCommitMessage.localizedDescription, kind: .error)
+            return false
+        }
+
+        beginGitAction(for: repo.id)
+        defer { endGitAction(for: repo.id) }
+
+        do {
+            let result = try await gitClient.commit(repo, message: trimmedMessage)
+            try await clearBlockedState(repoID: repo.id)
+            let shortID = String(result.commitID.prefix(7))
+            publish("Committed \(shortID).", kind: .success)
+            await logger.log("Commit complete for \(repo.displayName): \(result.commitID)")
+            return true
+        } catch {
+            publish(error.localizedDescription, kind: .error)
+            await logger.log("Commit failed for \(repo.displayName): \(error)", level: .warning)
+            return false
+        }
+    }
+
+    func push(repo: RepoRecord) async -> Bool {
+        beginGitAction(for: repo.id)
+        defer { endGitAction(for: repo.id) }
+
+        do {
+            let result = try await gitClient.push(repo)
+            try await clearBlockedState(repoID: repo.id)
+            publish("Pushed \(result.branchName) to \(result.remoteName).", kind: .success)
+            await logger.log("Push complete for \(repo.displayName) -> \(result.remoteName)/\(result.branchName)")
+            return true
+        } catch {
+            publish(error.localizedDescription, kind: .error)
+            await logger.log("Push failed for \(repo.displayName): \(error)", level: .warning)
+            return false
+        }
+    }
+
+    func quickAddCommitPush(repo: RepoRecord, message: String) async -> Bool {
+        let trimmedMessage = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedMessage.isEmpty else {
+            publish(RepoError.invalidCommitMessage.localizedDescription, kind: .error)
+            return false
+        }
+
+        beginGitAction(for: repo.id)
+        defer { endGitAction(for: repo.id) }
+
+        do {
+            try await gitClient.stageAll(repo)
+            let commitResult = try await gitClient.commit(repo, message: trimmedMessage)
+            let pushResult = try await gitClient.push(repo)
+            try await clearBlockedState(repoID: repo.id)
+
+            let shortID = String(commitResult.commitID.prefix(7))
+            publish(
+                "Committed \(shortID) and pushed \(pushResult.branchName) to \(pushResult.remoteName).",
+                kind: .success
+            )
+            await logger.log("Quick add+commit+push complete for \(repo.displayName): \(commitResult.commitID)")
+            return true
+        } catch {
+            publish(error.localizedDescription, kind: .error)
+            await logger.log("Quick add+commit+push failed for \(repo.displayName): \(error)", level: .warning)
+            return false
+        }
+    }
+
+    func discardLocalChanges(repo: RepoRecord) async {
+        beginGitAction(for: repo.id)
+        defer { endGitAction(for: repo.id) }
+
+        do {
+            try await gitClient.discardLocalChanges(repo)
+            try await clearBlockedState(repoID: repo.id)
+            publish("Discarded local changes for \(repo.displayName).", kind: .success)
+            await logger.log("Discarded local changes for \(repo.displayName)")
+        } catch {
+            publish("Could not discard local changes: \(error.localizedDescription)", kind: .error)
+            await logger.log("Discard local changes failed for \(repo.displayName): \(error)", level: .warning)
+        }
+    }
+
+    func resetToRemote(repo: RepoRecord) async {
+        beginGitAction(for: repo.id)
+        defer { endGitAction(for: repo.id) }
+
+        do {
+            let result = try await gitClient.resetToRemote(repo)
+            if result.state == .success {
+                try await clearBlockedState(repoID: repo.id)
+                publish(result.message ?? "Reset to remote completed.", kind: .success)
+            } else {
+                publish(result.message ?? "Reset to remote failed.", kind: .error)
+            }
+            await logger.log("Reset-to-remote for \(repo.displayName): \(result.state.rawValue)")
+        } catch {
+            publish("Could not reset to remote: \(error.localizedDescription)", kind: .error)
+            await logger.log("Reset-to-remote failed for \(repo.displayName): \(error)", level: .warning)
         }
     }
 
@@ -321,6 +464,25 @@ final class RepoListViewModel: ObservableObject {
         case .success:
             return 6
         }
+    }
+
+    private func beginGitAction(for repoID: RepoID) {
+        activeGitActionRepoIDs.insert(repoID)
+    }
+
+    private func endGitAction(for repoID: RepoID) {
+        activeGitActionRepoIDs.remove(repoID)
+    }
+
+    private func clearBlockedState(repoID: RepoID) async throws {
+        guard var repo = try await repoStore.repo(id: repoID) else {
+            return
+        }
+
+        repo.lastSyncState = .idle
+        repo.lastErrorMessage = nil
+        try await repoStore.upsert(repo)
+        repos = try await repoStore.listRepos()
     }
 
     private func ensureKeyForHost(_ host: String, passphrase: String?) async throws -> Bool {

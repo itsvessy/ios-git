@@ -9,9 +9,11 @@ struct RepoListView: View {
     private let rowHorizontalInset = AppSpacingTokens.large
 
     @State private var pendingDeleteRepo: RepoRecord?
+    @State private var pendingDiscardRepo: RepoRecord?
     @State private var isPresentingAddRepo = false
     @State private var isPresentingSecurity = false
     @State private var selectedRepoForFilesID: RepoID?
+    @State private var selectedRepoForGitActions: RepoRecord?
 
     var body: some View {
         repoList
@@ -62,12 +64,15 @@ struct RepoListView: View {
         }
         .navigationDestination(item: $selectedRepoForFilesID) { repoID in
             if let repo = viewModel.repos.first(where: { $0.id == repoID }) {
-                RepoFilesView(repo: repo)
+                RepoFilesView(repo: repo, viewModel: viewModel)
             } else {
                 Text("Repository not found.")
                     .font(AppTypography.caption)
                     .foregroundStyle(.secondary)
             }
+        }
+        .sheet(item: $selectedRepoForGitActions) { repo in
+            RepoGitActionsSheet(repo: repo, viewModel: viewModel)
         }
         .navigationDestination(isPresented: $isPresentingSecurity) {
             SecurityCenterView(viewModel: securityViewModel)
@@ -98,6 +103,27 @@ struct RepoListView: View {
             }
         } message: { repo in
             Text("Choose whether to remove only this repo entry or also delete local files at \(repo.localPath).")
+        }
+        .confirmationDialog(
+            "Discard Local Changes?",
+            isPresented: Binding(
+                get: { pendingDiscardRepo != nil },
+                set: { if !$0 { pendingDiscardRepo = nil } }
+            ),
+            titleVisibility: .visible,
+            presenting: pendingDiscardRepo
+        ) { repo in
+            Button("Discard", role: .destructive) {
+                Task {
+                    await viewModel.discardLocalChanges(repo: repo)
+                }
+                pendingDiscardRepo = nil
+            }
+            Button("Cancel", role: .cancel) {
+                pendingDiscardRepo = nil
+            }
+        } message: { repo in
+            Text("This will delete all uncommitted changes in \(repo.displayName), including untracked files.")
         }
         .task {
             await viewModel.refresh()
@@ -147,7 +173,9 @@ struct RepoListView: View {
                         repo: repo,
                         viewModel: viewModel,
                         onDelete: { pendingDeleteRepo = $0 },
-                        onOpenFiles: { selectedRepoForFilesID = $0 }
+                        onOpenFiles: { selectedRepoForFilesID = $0 },
+                        onOpenGitActions: { selectedRepoForGitActions = $0 },
+                        onDiscard: { pendingDiscardRepo = $0 }
                     )
                     .listRowInsets(EdgeInsets(top: 6, leading: rowHorizontalInset, bottom: 6, trailing: rowHorizontalInset))
                     .listRowBackground(Color.clear)
@@ -188,6 +216,8 @@ private struct RepoRowView: View {
     @ObservedObject var viewModel: RepoListViewModel
     let onDelete: (RepoRecord) -> Void
     let onOpenFiles: (RepoID) -> Void
+    let onOpenGitActions: (RepoRecord) -> Void
+    let onDiscard: (RepoRecord) -> Void
 
     var body: some View {
         AppCard {
@@ -297,18 +327,26 @@ private struct RepoRowView: View {
         .buttonStyle(.borderedProminent)
         .controlSize(.small)
         .tint(AppColorTokens.accent)
-        .disabled(viewModel.isSyncing(repoID: repo.id))
+        .disabled(viewModel.isSyncing(repoID: repo.id) || viewModel.isGitActionInProgress(repoID: repo.id))
         .accessibilityLabel(viewModel.isSyncing(repoID: repo.id) ? "Syncing repository" : "Sync repository")
     }
 
     private var moreMenu: some View {
         Menu {
-            Button("Discard Local Changes") {
-                viewModel.discardLocalChanges(repo: repo)
+            Button("Git Actions") {
+                onOpenGitActions(repo)
             }
-            Button("Reset Diverged Marker") {
-                viewModel.resolveDivergedByReset(repo: repo)
+
+            Button("Discard Local Changes", role: .destructive) {
+                onDiscard(repo)
             }
+
+            Button("Reset to Remote") {
+                Task {
+                    await viewModel.resetToRemote(repo: repo)
+                }
+            }
+
             Divider()
             Button(role: .destructive) {
                 onDelete(repo)
@@ -323,6 +361,7 @@ private struct RepoRowView: View {
         .controlSize(.small)
         .tint(AppColorTokens.accent)
         .accessibilityLabel("More actions")
+        .disabled(viewModel.isGitActionInProgress(repoID: repo.id))
     }
 }
 

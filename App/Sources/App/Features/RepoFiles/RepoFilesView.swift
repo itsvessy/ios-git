@@ -4,12 +4,19 @@ import SwiftUI
 
 struct RepoFilesView: View {
     let repo: RepoRecord
+    @ObservedObject var viewModel: RepoListViewModel
 
     @State private var entries: [WorkingTreeEntry] = []
+    @State private var localChanges: [RepoLocalChange] = []
+    @State private var selectedChangePaths: Set<String> = []
     @State private var errorMessage: String?
     @State private var showHiddenItems = false
     @State private var includeDirectories = false
     @State private var searchQuery = ""
+    @State private var commitMessage = ""
+    @State private var identityName = ""
+    @State private var identityEmail = ""
+    @State private var isIdentityMissing = true
     @State private var loadTask: Task<Void, Never>?
 
     var body: some View {
@@ -20,6 +27,8 @@ struct RepoFilesView: View {
                     .foregroundStyle(.secondary)
                     .textSelection(.enabled)
             }
+
+            changedFilesSection
 
             if let errorMessage {
                 Section("Error") {
@@ -87,6 +96,7 @@ struct RepoFilesView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     scheduleLoadEntries()
+                    Task { await reloadGitState() }
                 } label: {
                     Label("Refresh Files", systemImage: "arrow.clockwise")
                 }
@@ -94,6 +104,7 @@ struct RepoFilesView: View {
         }
         .task {
             scheduleLoadEntries()
+            await reloadGitState()
         }
         .onChange(of: showHiddenItems) { _, _ in
             scheduleLoadEntries()
@@ -103,6 +114,118 @@ struct RepoFilesView: View {
         }
         .onDisappear {
             loadTask?.cancel()
+        }
+    }
+
+    @ViewBuilder
+    private var changedFilesSection: some View {
+        Section("Changed Files (\(localChanges.count))") {
+            if localChanges.isEmpty {
+                Text("No changed files.")
+                    .font(AppTypography.caption)
+                    .foregroundStyle(.secondary)
+            } else {
+                ForEach(localChanges) { change in
+                    Button {
+                        toggleSelection(path: change.path)
+                    } label: {
+                        HStack(spacing: AppSpacingTokens.small) {
+                            Image(systemName: selectedChangePaths.contains(change.path) ? "checkmark.circle.fill" : "circle")
+                                .foregroundStyle(
+                                    selectedChangePaths.contains(change.path)
+                                        ? AppColorTokens.accent
+                                        : .secondary
+                                )
+
+                            Text(change.path)
+                                .font(AppTypography.captionMonospaced)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                                .foregroundStyle(.primary)
+
+                            Spacer(minLength: 8)
+
+                            Text(change.stageState.rawValue.capitalized)
+                                .font(AppTypography.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+
+            HStack {
+                Button("Add Selected") {
+                    Task {
+                        let success = await viewModel.stage(repo: repo, paths: Array(selectedChangePaths))
+                        if success {
+                            await reloadGitState()
+                        }
+                    }
+                }
+                .disabled(isBusy || selectedChangePaths.isEmpty)
+
+                Button("Add All") {
+                    Task {
+                        let success = await viewModel.stageAll(repo: repo)
+                        if success {
+                            await reloadGitState()
+                        }
+                    }
+                }
+                .disabled(isBusy || localChanges.isEmpty)
+            }
+
+            if isIdentityMissing {
+                TextField("Commit Name", text: $identityName)
+                    .textInputAutocapitalization(.words)
+                    .autocorrectionDisabled()
+
+                TextField("Commit Email", text: $identityEmail)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .keyboardType(.emailAddress)
+                    .textContentType(.emailAddress)
+
+                Button("Save Identity") {
+                    Task {
+                        _ = await saveIdentityIfValid()
+                    }
+                }
+                .disabled(
+                    isBusy ||
+                        identityName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
+                        identityEmail.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                )
+            }
+
+            TextEditor(text: $commitMessage)
+                .frame(minHeight: 90)
+                .font(AppTypography.body)
+
+            HStack {
+                Button("Commit") {
+                    Task {
+                        guard await ensureIdentityReady() else {
+                            return
+                        }
+                        let success = await viewModel.commit(repo: repo, message: commitMessage)
+                        if success {
+                            commitMessage = ""
+                            await reloadGitState()
+                        }
+                    }
+                }
+                .disabled(isBusy || commitMessage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
+                Button("Push") {
+                    Task {
+                        _ = await viewModel.push(repo: repo)
+                        await reloadGitState()
+                    }
+                }
+                .disabled(isBusy)
+            }
         }
     }
 
@@ -154,6 +277,57 @@ struct RepoFilesView: View {
         case .cancelled:
             break
         }
+    }
+
+    private var isBusy: Bool {
+        viewModel.isGitActionInProgress(repoID: repo.id) || viewModel.isSyncing(repoID: repo.id)
+    }
+
+    private func reloadGitState() async {
+        localChanges = await viewModel.loadLocalChanges(repo: repo)
+        selectedChangePaths = selectedChangePaths.intersection(Set(localChanges.map(\.path)))
+
+        let identity = await viewModel.loadCommitIdentity(repo: repo)
+        if let identity {
+            identityName = identity.name
+            identityEmail = identity.email
+            isIdentityMissing = false
+        } else {
+            isIdentityMissing = true
+        }
+    }
+
+    private func toggleSelection(path: String) {
+        if selectedChangePaths.contains(path) {
+            selectedChangePaths.remove(path)
+        } else {
+            selectedChangePaths.insert(path)
+        }
+    }
+
+    private func ensureIdentityReady() async -> Bool {
+        if !isIdentityMissing {
+            return true
+        }
+        return await saveIdentityIfValid()
+    }
+
+    private func saveIdentityIfValid() async -> Bool {
+        let trimmedName = identityName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedEmail = identityEmail.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty, !trimmedEmail.isEmpty else {
+            return false
+        }
+
+        let saved = await viewModel.saveCommitIdentity(
+            repo: repo,
+            name: trimmedName,
+            email: trimmedEmail
+        )
+        if saved {
+            isIdentityMissing = false
+        }
+        return saved
     }
 }
 

@@ -24,6 +24,34 @@ private struct StubGitClient: GitClient {
     func probeRemote(_ remoteURL: String) async throws -> RemoteProbeResult {
         try prepareResult.get()
     }
+
+    func listLocalChanges(_ repo: RepoRecord) async throws -> [RepoLocalChange] {
+        []
+    }
+
+    func stage(_ repo: RepoRecord, paths: [String]) async throws {}
+
+    func stageAll(_ repo: RepoRecord) async throws {}
+
+    func loadCommitIdentity(_ repo: RepoRecord) async throws -> RepoCommitIdentity? {
+        nil
+    }
+
+    func saveCommitIdentity(_ identity: RepoCommitIdentity, for repo: RepoRecord) async throws {}
+
+    func commit(_ repo: RepoRecord, message: String) async throws -> RepoCommitResult {
+        RepoCommitResult(commitID: "deadbeef", message: message)
+    }
+
+    func push(_ repo: RepoRecord) async throws -> RepoPushResult {
+        RepoPushResult(remoteName: "origin", branchName: repo.trackedBranch)
+    }
+
+    func discardLocalChanges(_ repo: RepoRecord) async throws {}
+
+    func resetToRemote(_ repo: RepoRecord) async throws -> SyncResult {
+        SyncResult(state: .success, message: "ok")
+    }
 }
 
 private struct StubKeyManager: SSHKeyManaging {

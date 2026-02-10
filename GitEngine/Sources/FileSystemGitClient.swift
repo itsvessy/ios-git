@@ -28,18 +28,18 @@ public actor FileSystemGitClient: GitClient {
 
     public func probeRemote(_ remoteURL: String) async throws -> RemoteProbeResult {
         let parsed = try SSHRemoteURL(parse: remoteURL)
-        return RemoteProbeResult(host: parsed.host, port: parsed.port, normalizedURL: parsed.normalized)
+        return makeProbeResult(from: parsed)
+    }
+
+    public func prepareRemote(_ remoteURL: String) async throws -> RemoteProbeResult {
+        let parsed = try SSHRemoteURL(parse: remoteURL)
+        try await evaluateHostTrust(parsed)
+        return makeProbeResult(from: parsed)
     }
 
     public func clone(_ request: CloneRequest) async throws -> RepoRecord {
         let parsed = try SSHRemoteURL(parse: request.remoteURL)
-        let fingerprint = syntheticHostFingerprint(host: parsed.host, port: parsed.port)
-        _ = try await trustEvaluator.evaluate(
-            host: parsed.host,
-            port: parsed.port,
-            presentedFingerprint: fingerprint,
-            algorithm: "ed25519"
-        )
+        try await evaluateHostTrust(parsed)
 
         let credential = try await credentialProvider.credential(for: parsed.host, username: parsed.user)
 
@@ -108,13 +108,7 @@ public actor FileSystemGitClient: GitClient {
             }
 
             let parsed = try SSHRemoteURL(parse: repo.remoteURL)
-            let fingerprint = syntheticHostFingerprint(host: parsed.host, port: parsed.port)
-            _ = try await trustEvaluator.evaluate(
-                host: parsed.host,
-                port: parsed.port,
-                presentedFingerprint: fingerprint,
-                algorithm: "ed25519"
-            )
+            try await evaluateHostTrust(parsed)
 
             let credential = try await credentialProvider.credential(for: parsed.host, username: parsed.user)
 
@@ -398,6 +392,20 @@ public actor FileSystemGitClient: GitClient {
             .trimmingCharacters(in: .whitespacesAndNewlines.union(CharacterSet(charactersIn: ".")))
 
         return cleaned.isEmpty ? "Repository" : cleaned
+    }
+
+    private func makeProbeResult(from parsed: SSHRemoteURL) -> RemoteProbeResult {
+        RemoteProbeResult(host: parsed.host, port: parsed.port, normalizedURL: parsed.normalized)
+    }
+
+    private func evaluateHostTrust(_ parsed: SSHRemoteURL) async throws {
+        let fingerprint = syntheticHostFingerprint(host: parsed.host, port: parsed.port)
+        _ = try await trustEvaluator.evaluate(
+            host: parsed.host,
+            port: parsed.port,
+            presentedFingerprint: fingerprint,
+            algorithm: "ed25519"
+        )
     }
 
     private func syntheticHostFingerprint(host: String, port: Int) -> String {

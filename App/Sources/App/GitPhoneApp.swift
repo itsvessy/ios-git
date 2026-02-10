@@ -13,7 +13,8 @@ struct GitPhoneApp: App {
                 viewModel: container.viewModel,
                 hostTrustPrompter: container.hostTrustPrompter,
                 securityViewModel: container.securityCenterViewModel,
-                bannerCenter: container.bannerCenter
+                bannerCenter: container.bannerCenter,
+                keyboardWarmupCoordinator: container.keyboardWarmupCoordinator
             )
             .appTheme()
             .modelContainer(container.modelContainer)
@@ -22,6 +23,9 @@ struct GitPhoneApp: App {
             switch newPhase {
             case .active:
                 container.appLock.handleBecameActive()
+                container.keyboardWarmupCoordinator.warmupIfNeeded(
+                    isUnlocked: container.appLock.isUnlocked
+                )
             case .background:
                 container.appLock.handleDidEnterBackground()
             default:

@@ -5,6 +5,13 @@ import GitEngine
 import SecurityEngine
 import Storage
 
+struct RepoSSHPreparation: Sendable {
+    let host: String
+    let normalizedRemoteURL: String
+    let key: SSHKeyRecord
+    let didGenerateKey: Bool
+}
+
 @MainActor
 final class RepoListViewModel: ObservableObject {
     @Published private(set) var repos: [RepoRecord] = []
@@ -19,14 +26,14 @@ final class RepoListViewModel: ObservableObject {
     private let repoStore: RepoStore
     private let gitClient: GitClient
     private let logger: AppLogger
-    private let keyManager: SSHKeyManager
+    private let keyManager: any SSHKeyManaging
     private let bannerCenter: AppBannerCenter
 
     init(
         repoStore: RepoStore,
         gitClient: GitClient,
         logger: AppLogger,
-        keyManager: SSHKeyManager,
+        keyManager: any SSHKeyManaging,
         bannerCenter: AppBannerCenter
     ) {
         self.repoStore = repoStore
@@ -98,14 +105,29 @@ final class RepoListViewModel: ObservableObject {
         syncingRepoIDs.contains(repoID)
     }
 
-    func refresh() {
+    func refresh() async {
         do {
-            repos = try repoStore.listRepos()
-            sshKeys = try repoStore.listKeys()
+            repos = try await repoStore.listRepos()
         } catch {
             publish("Failed loading repositories: \(error.localizedDescription)", kind: .error)
             Task { await logger.log("Failed loading repos: \(error)", level: .error) }
         }
+    }
+
+    func prepareSSHForAddRepo(remoteURL: String, passphrase: String?) async throws -> RepoSSHPreparation {
+        let probe = try await gitClient.prepareRemote(remoteURL)
+        let didGenerateKey = try await ensureKeyForHost(probe.host, passphrase: passphrase)
+        guard let key = try await repoStore.defaultKey(host: probe.host) else {
+            throw RepoError.keyNotFound
+        }
+        sshKeys = try await repoStore.listKeys()
+
+        return RepoSSHPreparation(
+            host: probe.host,
+            normalizedRemoteURL: probe.normalizedURL,
+            key: key,
+            didGenerateKey: didGenerateKey
+        )
     }
 
     @discardableResult
@@ -114,25 +136,13 @@ final class RepoListViewModel: ObservableObject {
         remoteURL: String,
         trackedBranch: String,
         autoSyncEnabled: Bool,
-        generateKeyIfNeeded: Bool,
-        passphrase: String?,
         cloneRootURL: URL? = nil,
         cloneRootBookmark: Data? = nil
     ) async -> Bool {
         isAddingRepo = true
         defer { isAddingRepo = false }
 
-        var generatedNewKey = false
-
         do {
-            let parsed = try SSHRemoteURL(parse: remoteURL)
-            if generateKeyIfNeeded {
-                generatedNewKey = try ensureKeyForHost(parsed.host, passphrase: passphrase)
-                if generatedNewKey {
-                    sshKeys = try repoStore.listKeys()
-                }
-            }
-
             let targetDirectory = cloneRootURL ?? repositoriesRoot()
             let request = CloneRequest(
                 displayName: displayName,
@@ -144,38 +154,25 @@ final class RepoListViewModel: ObservableObject {
             )
 
             let repo = try await gitClient.clone(request)
-            try repoStore.upsert(repo)
-            repos = try repoStore.listRepos()
-            sshKeys = try repoStore.listKeys()
+            try await repoStore.upsert(repo)
+            try await reloadStateFromStore()
 
-            if generatedNewKey {
-                publish("Added \(repo.displayName). Generated a new key for \(parsed.host).", kind: .success)
-            } else {
-                publish("Added \(repo.displayName).", kind: .success)
-            }
+            publish("Added \(repo.displayName).", kind: .success)
             await logger.log("Cloned repo \(repo.displayName) at \(repo.localPath)")
             return true
         } catch {
             do {
-                repos = try repoStore.listRepos()
-                sshKeys = try repoStore.listKeys()
+                try await reloadStateFromStore()
             } catch {
                 await logger.log("State refresh after add failure failed: \(error)", level: .error)
             }
 
             if let repoError = error as? RepoError,
                case .syncBlocked = repoError {
-                if generatedNewKey {
-                    publish(
-                        "SSH auth failed. A key was created, but the repository was not added.",
-                        kind: .warning
-                    )
-                } else {
-                    publish(
-                        "SSH auth failed. The repository was not added.",
-                        kind: .error
-                    )
-                }
+                publish(
+                    "SSH auth failed. The repository was not added.",
+                    kind: .error
+                )
             } else {
                 publish(error.localizedDescription, kind: .error)
             }
@@ -194,12 +191,12 @@ final class RepoListViewModel: ObservableObject {
         working.lastErrorMessage = nil
 
         do {
-            try repoStore.upsert(working)
-            repos = try repoStore.listRepos()
+            try await repoStore.upsert(working)
+            repos = try await repoStore.listRepos()
 
             let result = try await gitClient.sync(repo, trigger: trigger)
-            try repoStore.setSyncResult(repoID: repo.id, result: result)
-            repos = try repoStore.listRepos()
+            try await repoStore.setSyncResult(repoID: repo.id, result: result)
+            repos = try await repoStore.listRepos()
 
             if let message = result.message, !message.isEmpty {
                 publish(message, kind: result.state == .success ? .success : .info)
@@ -211,8 +208,8 @@ final class RepoListViewModel: ObservableObject {
         } catch {
             let mapped = map(error: error)
             do {
-                try repoStore.setSyncResult(repoID: repo.id, result: mapped)
-                repos = try repoStore.listRepos()
+                try await repoStore.setSyncResult(repoID: repo.id, result: mapped)
+                repos = try await repoStore.listRepos()
             } catch {
                 await logger.log("Failed persisting sync error: \(error)", level: .error)
             }
@@ -222,12 +219,12 @@ final class RepoListViewModel: ObservableObject {
         }
     }
 
-    func setAutoSync(repo: RepoRecord, enabled: Bool) {
+    func setAutoSync(repo: RepoRecord, enabled: Bool) async {
         var updated = repo
         updated.autoSyncEnabled = enabled
         do {
-            try repoStore.upsert(updated)
-            repos = try repoStore.listRepos()
+            try await repoStore.upsert(updated)
+            repos = try await repoStore.listRepos()
         } catch {
             publish(error.localizedDescription, kind: .error)
         }
@@ -261,7 +258,7 @@ final class RepoListViewModel: ObservableObject {
         }
     }
 
-    func deleteRepo(repo: RepoRecord, removeFiles: Bool) {
+    func deleteRepo(repo: RepoRecord, removeFiles: Bool) async {
         do {
             let didDeleteFiles: Bool
             if removeFiles {
@@ -276,8 +273,8 @@ final class RepoListViewModel: ObservableObject {
                 didDeleteFiles = false
             }
 
-            try repoStore.delete(repoID: repo.id)
-            repos = try repoStore.listRepos()
+            try await repoStore.delete(repoID: repo.id)
+            repos = try await repoStore.listRepos()
 
             if removeFiles {
                 publish(
@@ -326,8 +323,8 @@ final class RepoListViewModel: ObservableObject {
         }
     }
 
-    private func ensureKeyForHost(_ host: String, passphrase: String?) throws -> Bool {
-        if let _ = try repoStore.defaultKey(host: host) {
+    private func ensureKeyForHost(_ host: String, passphrase: String?) async throws -> Bool {
+        if let _ = try await repoStore.defaultKey(host: host) {
             return false
         }
 
@@ -337,8 +334,12 @@ final class RepoListViewModel: ObservableObject {
             preferredAlgorithm: .ed25519,
             passphrase: passphrase
         )
-        try repoStore.saveKey(generated.record, isHostDefault: true)
+        try await repoStore.saveKey(generated.record, isHostDefault: true)
         return true
+    }
+
+    private func reloadStateFromStore() async throws {
+        repos = try await repoStore.listRepos()
     }
 
     private func repositoriesRoot() -> URL {

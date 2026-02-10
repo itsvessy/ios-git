@@ -13,7 +13,7 @@ final class RepoStoreSecurityManagementTests: XCTestCase {
         let schema = Schema(StorageSchema.models)
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         container = try ModelContainer(for: schema, configurations: config)
-        store = RepoStore(context: container.mainContext)
+        store = RepoStore(container: container)
     }
 
     override func tearDownWithError() throws {
@@ -21,8 +21,8 @@ final class RepoStoreSecurityManagementTests: XCTestCase {
         store = nil
     }
 
-    func testListAndDeleteFingerprints() throws {
-        try store.saveFingerprint(
+    func testListAndDeleteFingerprints() async throws {
+        try await store.saveFingerprint(
             HostFingerprintRecord(
                 host: "github.com",
                 port: 22,
@@ -31,7 +31,7 @@ final class RepoStoreSecurityManagementTests: XCTestCase {
                 acceptedAt: Date(timeIntervalSince1970: 100)
             )
         )
-        try store.saveFingerprint(
+        try await store.saveFingerprint(
             HostFingerprintRecord(
                 host: "gitlab.com",
                 port: 22,
@@ -41,44 +41,44 @@ final class RepoStoreSecurityManagementTests: XCTestCase {
             )
         )
 
-        let all = try store.listFingerprints()
+        let all = try await store.listFingerprints()
         XCTAssertEqual(all.count, 2)
 
-        try store.deleteFingerprint(host: "github.com", port: 22, algorithm: "ed25519")
+        try await store.deleteFingerprint(host: "github.com", port: 22, algorithm: "ed25519")
 
-        let afterDelete = try store.listFingerprints()
+        let afterDelete = try await store.listFingerprints()
         XCTAssertEqual(afterDelete.count, 1)
         XCTAssertEqual(afterDelete.first?.host, "gitlab.com")
     }
 
-    func testSetDefaultKeyUpdatesHostDefault() throws {
+    func testSetDefaultKeyUpdatesHostDefault() async throws {
         let first = makeKey(host: "github.com", label: "Key A")
         let second = makeKey(host: "github.com", label: "Key B")
 
-        try store.saveKey(first, isHostDefault: true)
-        try store.saveKey(second, isHostDefault: false)
+        try await store.saveKey(first, isHostDefault: true)
+        try await store.saveKey(second, isHostDefault: false)
 
-        try store.setDefaultKey(host: "github.com", keyID: second.id)
+        try await store.setDefaultKey(host: "github.com", keyID: second.id)
 
-        let defaultKey = try store.defaultKey(host: "github.com")
+        let defaultKey = try await store.defaultKey(host: "github.com")
         XCTAssertEqual(defaultKey?.id, second.id)
     }
 
-    func testDeleteKeyPromotesNextDefaultForHost() throws {
+    func testDeleteKeyPromotesNextDefaultForHost() async throws {
         let first = makeKey(host: "github.com", label: "Key A")
         let second = makeKey(host: "github.com", label: "Key B")
 
-        try store.saveKey(first, isHostDefault: true)
-        try store.saveKey(second, isHostDefault: false)
+        try await store.saveKey(first, isHostDefault: true)
+        try await store.saveKey(second, isHostDefault: false)
 
-        let removed = try store.deleteKey(id: first.id)
+        let removed = try await store.deleteKey(id: first.id)
         XCTAssertEqual(removed?.id, first.id)
 
-        let defaultAfterDelete = try store.defaultKey(host: "github.com")
+        let defaultAfterDelete = try await store.defaultKey(host: "github.com")
         XCTAssertEqual(defaultAfterDelete?.id, second.id)
 
-        _ = try store.deleteKey(id: second.id)
-        let defaultAfterRemovingAll = try store.defaultKey(host: "github.com")
+        _ = try await store.deleteKey(id: second.id)
+        let defaultAfterRemovingAll = try await store.defaultKey(host: "github.com")
         XCTAssertNil(defaultAfterRemovingAll)
     }
 

@@ -53,14 +53,16 @@ struct SecurityCenterView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    viewModel.refresh()
+                    Task {
+                        await viewModel.refresh()
+                    }
                 } label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
             }
         }
         .task {
-            viewModel.refresh()
+            await viewModel.refresh()
         }
     }
 

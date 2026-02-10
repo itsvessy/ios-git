@@ -23,8 +23,9 @@ struct RepoListView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
-                    viewModel.refresh()
-                    securityViewModel.refresh()
+                    Task {
+                        await viewModel.refresh()
+                    }
                 } label: {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
@@ -81,11 +82,15 @@ struct RepoListView: View {
             presenting: pendingDeleteRepo
         ) { repo in
             Button("Remove from GitPhone", role: .destructive) {
-                viewModel.deleteRepo(repo: repo, removeFiles: false)
+                Task {
+                    await viewModel.deleteRepo(repo: repo, removeFiles: false)
+                }
                 pendingDeleteRepo = nil
             }
             Button("Remove and Delete Files", role: .destructive) {
-                viewModel.deleteRepo(repo: repo, removeFiles: true)
+                Task {
+                    await viewModel.deleteRepo(repo: repo, removeFiles: true)
+                }
                 pendingDeleteRepo = nil
             }
             Button("Cancel", role: .cancel) {
@@ -95,8 +100,7 @@ struct RepoListView: View {
             Text("Choose whether to remove only this repo entry or also delete local files at \(repo.localPath).")
         }
         .task {
-            viewModel.refresh()
-            securityViewModel.refresh()
+            await viewModel.refresh()
         }
     }
 
@@ -220,7 +224,9 @@ private struct RepoRowView: View {
                     Toggle("Auto Sync", isOn: Binding(
                         get: { repo.autoSyncEnabled },
                         set: { newValue in
-                            viewModel.setAutoSync(repo: repo, enabled: newValue)
+                            Task {
+                                await viewModel.setAutoSync(repo: repo, enabled: newValue)
+                            }
                         }
                     ))
                     .labelsHidden()

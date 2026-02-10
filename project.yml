@@ -5,7 +5,7 @@ settings:
   base:
     SWIFT_VERSION: 6.0
     IPHONEOS_DEPLOYMENT_TARGET: 18.0
-    DEVELOPMENT_TEAM: ""
+    DEVELOPMENT_TEAM: WDKDNA9572
 packages:
   SwiftGitX:
     path: Vendor/SwiftGitX
@@ -16,8 +16,8 @@ targets:
     deploymentTarget: "18.0"
     sources:
       - path: App/Sources
-    resources:
       - path: App/Resources
+        buildPhase: resources
     info:
       path: App/Info.plist
       properties:
@@ -32,6 +32,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone
+        DEVELOPMENT_TEAM: WDKDNA9572
+        CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: false
         SWIFT_EMIT_LOC_STRINGS: true
     dependencies:
@@ -123,6 +125,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.Tests
+        DEVELOPMENT_TEAM: WDKDNA9572
+        CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: true
 
   GitPhoneUITests:
@@ -136,4 +140,6 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.UITests
+        DEVELOPMENT_TEAM: WDKDNA9572
+        CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: true

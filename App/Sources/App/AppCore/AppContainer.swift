@@ -11,10 +11,11 @@ final class AppContainer: ObservableObject {
     let modelContainer: ModelContainer
     let repoStore: RepoStore
     let logger: AppLogger
-    let keyManager: SSHKeyManager
+    let keyManager: any SSHKeyManaging
     let appLock: AppLockCoordinator
     let hostTrustPrompter: HostTrustPrompter
     let bannerCenter: AppBannerCenter
+    let keyboardWarmupCoordinator: KeyboardWarmupCoordinator
     let viewModel: RepoListViewModel
     let securityCenterViewModel: SecurityCenterViewModel
 
@@ -22,14 +23,26 @@ final class AppContainer: ObservableObject {
 
     init() {
         let schema = Schema(StorageSchema.models)
-        let config = ModelConfiguration(isStoredInMemoryOnly: false)
-        modelContainer = try! ModelContainer(for: schema, configurations: config)
-        repoStore = RepoStore(context: modelContainer.mainContext)
+        let storeURL: URL
+        do {
+            storeURL = try PersistenceStoreBootstrap().prepareStoreURL()
+        } catch {
+            fatalError("Failed to prepare persistence store directory: \(error)")
+        }
+
+        let config = ModelConfiguration(url: storeURL)
+        do {
+            modelContainer = try ModelContainer(for: schema, configurations: config)
+        } catch {
+            fatalError("Failed to initialize persistent store at \(storeURL.path): \(error)")
+        }
+        repoStore = RepoStore(container: modelContainer)
         logger = AppLogger()
         keyManager = SSHKeyManager()
         appLock = AppLockCoordinator(relockInterval: 30 * 60)
         hostTrustPrompter = HostTrustPrompter()
         bannerCenter = AppBannerCenter()
+        keyboardWarmupCoordinator = KeyboardWarmupCoordinator()
 
         if ProcessInfo.processInfo.arguments.contains("UITEST_BYPASS_LOCK") {
             appLock.markUnlocked()
@@ -37,14 +50,10 @@ final class AppContainer: ObservableObject {
 
         let trustEvaluator = FingerprintPinningPolicy(
             lookup: { [repoStore] host, port, algorithm in
-                try await MainActor.run {
-                    try repoStore.fingerprint(host: host, port: port, algorithm: algorithm)
-                }
+                try await repoStore.fingerprint(host: host, port: port, algorithm: algorithm)
             },
             persist: { [repoStore] record in
-                try await MainActor.run {
-                    try repoStore.saveFingerprint(record)
-                }
+                try await repoStore.saveFingerprint(record)
             },
             prompt: { [hostTrustPrompter] host, fingerprint, algorithm in
                 await hostTrustPrompter.requestApproval(host: host, fingerprint: fingerprint, algorithm: algorithm)
@@ -53,9 +62,7 @@ final class AppContainer: ObservableObject {
 
         let credentialProvider = StoreCredentialProvider(
             lookupKey: { [repoStore] host in
-                try await MainActor.run {
-                    try repoStore.defaultKey(host: host)
-                }
+                try await repoStore.defaultKey(host: host)
             },
             keyManager: keyManager
         )
@@ -84,14 +91,10 @@ final class AppContainer: ObservableObject {
         backgroundSyncCoordinator = BackgroundSyncCoordinator(
             gitClient: gitClient,
             loadEligibleRepos: { [repoStore] in
-                try await MainActor.run {
-                    try repoStore.listRepos()
-                }
+                try await repoStore.listRepos()
             },
             persistResult: { [repoStore] repoID, result in
-                try? await MainActor.run {
-                    try repoStore.setSyncResult(repoID: repoID, result: result)
-                }
+                try? await repoStore.setSyncResult(repoID: repoID, result: result)
             }
         )
 

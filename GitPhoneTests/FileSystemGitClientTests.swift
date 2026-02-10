@@ -9,6 +9,12 @@ private actor TrustAllEvaluator: HostTrustEvaluator {
     }
 }
 
+private actor RejectTrustEvaluator: HostTrustEvaluator {
+    func evaluate(host: String, port: Int, presentedFingerprint: String, algorithm: String) async throws -> TrustDecision {
+        throw RepoError.hostTrustRejected
+    }
+}
+
 final class FileSystemGitClientTests: XCTestCase {
     func testProbeRemoteNormalizesSSHURL() async throws {
         let client = FileSystemGitClient(trustEvaluator: TrustAllEvaluator())
@@ -18,6 +24,31 @@ final class FileSystemGitClientTests: XCTestCase {
         XCTAssertEqual(result.host, "github.com")
         XCTAssertEqual(result.port, 22)
         XCTAssertEqual(result.normalizedURL, "ssh://git@github.com:22/owner/repo.git")
+    }
+
+    func testPrepareRemoteNormalizesSSHURL() async throws {
+        let client = FileSystemGitClient(trustEvaluator: TrustAllEvaluator())
+
+        let result = try await client.prepareRemote("git@github.com:owner/repo.git")
+
+        XCTAssertEqual(result.host, "github.com")
+        XCTAssertEqual(result.port, 22)
+        XCTAssertEqual(result.normalizedURL, "ssh://git@github.com:22/owner/repo.git")
+    }
+
+    func testPrepareRemotePropagatesTrustRejection() async {
+        let client = FileSystemGitClient(trustEvaluator: RejectTrustEvaluator())
+
+        do {
+            _ = try await client.prepareRemote("git@github.com:owner/repo.git")
+            XCTFail("Expected hostTrustRejected")
+        } catch let error as RepoError {
+            guard case .hostTrustRejected = error else {
+                return XCTFail("Unexpected RepoError: \(error)")
+            }
+        } catch {
+            XCTFail("Unexpected error: \(error)")
+        }
     }
 
     func testCloneFailsWithoutCredentials() async {

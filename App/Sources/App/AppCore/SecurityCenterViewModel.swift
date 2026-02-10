@@ -16,14 +16,14 @@ final class SecurityCenterViewModel: ObservableObject {
     let relockIntervalOptions: [TimeInterval] = [60, 300, 900, 1800, 3600]
 
     private let repoStore: RepoStore
-    private let keyManager: SSHKeyManager
+    private let keyManager: any SSHKeyManaging
     private let logger: AppLogger
     private let appLock: AppLockCoordinator
     private let bannerCenter: AppBannerCenter
 
     init(
         repoStore: RepoStore,
-        keyManager: SSHKeyManager,
+        keyManager: any SSHKeyManaging,
         logger: AppLogger,
         appLock: AppLockCoordinator,
         bannerCenter: AppBannerCenter
@@ -36,33 +36,23 @@ final class SecurityCenterViewModel: ObservableObject {
         self.selectedRelockInterval = appLock.relockInterval()
     }
 
-    func refresh() {
+    func refresh() async {
         isRefreshing = true
         defer { isRefreshing = false }
 
         do {
-            keys = try repoStore.listKeys()
+            let loadedKeys = try await repoStore.listKeys()
                 .sorted { lhs, rhs in
                     if lhs.host.localizedCaseInsensitiveCompare(rhs.host) == .orderedSame {
                         return lhs.label.localizedCaseInsensitiveCompare(rhs.label) == .orderedAscending
                     }
                     return lhs.host.localizedCaseInsensitiveCompare(rhs.host) == .orderedAscending
                 }
-            fingerprints = try repoStore.listFingerprints()
+            keys = loadedKeys
+            fingerprints = try await repoStore.listFingerprints()
+            defaultKeyIDByHost = try await repoStore.defaultKeyIDsByHost()
 
-            let hosts = Set(keys.map { $0.host.lowercased() })
-            var defaults: [String: UUID] = [:]
-            for host in hosts {
-                defaults[host] = try repoStore.defaultKey(host: host)?.id
-            }
-            defaultKeyIDByHost = defaults
-
-            Task {
-                let logURL = await logger.logFileURL()
-                await MainActor.run {
-                    self.logFileURL = logURL
-                }
-            }
+            logFileURL = await logger.logFileURL()
         } catch {
             bannerCenter.show(
                 RepoBannerMessage(
@@ -88,10 +78,10 @@ final class SecurityCenterViewModel: ObservableObject {
         bannerCenter.show(RepoBannerMessage(text: "Relock interval updated.", kind: .success))
     }
 
-    func setDefaultKey(host: String, keyID: UUID) {
+    func setDefaultKey(host: String, keyID: UUID) async {
         do {
-            try repoStore.setDefaultKey(host: host, keyID: keyID)
-            refresh()
+            try await repoStore.setDefaultKey(host: host, keyID: keyID)
+            await refresh()
             bannerCenter.show(RepoBannerMessage(text: "Default key updated for \(host).", kind: .success))
         } catch {
             bannerCenter.show(
@@ -103,9 +93,9 @@ final class SecurityCenterViewModel: ObservableObject {
         }
     }
 
-    func deleteKey(_ key: SSHKeyRecord) {
+    func deleteKey(_ key: SSHKeyRecord) async {
         do {
-            guard let deleted = try repoStore.deleteKey(id: key.id) else {
+            guard let deleted = try await repoStore.deleteKey(id: key.id) else {
                 return
             }
 
@@ -123,7 +113,7 @@ final class SecurityCenterViewModel: ObservableObject {
                 )
             }
 
-            refresh()
+            await refresh()
             bannerCenter.show(RepoBannerMessage(text: "Deleted key \(deleted.label).", kind: .success))
         } catch {
             bannerCenter.show(
@@ -135,14 +125,14 @@ final class SecurityCenterViewModel: ObservableObject {
         }
     }
 
-    func deleteFingerprint(_ fingerprint: HostFingerprintRecord) {
+    func deleteFingerprint(_ fingerprint: HostFingerprintRecord) async {
         do {
-            try repoStore.deleteFingerprint(
+            try await repoStore.deleteFingerprint(
                 host: fingerprint.host,
                 port: fingerprint.port,
                 algorithm: fingerprint.algorithm
             )
-            refresh()
+            await refresh()
             bannerCenter.show(RepoBannerMessage(text: "Removed trust pin for \(fingerprint.host).", kind: .success))
         } catch {
             bannerCenter.show(

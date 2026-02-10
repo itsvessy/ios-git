@@ -60,7 +60,9 @@ struct TrustedHostsView: View {
             presenting: pendingDelete
         ) { fingerprint in
             Button("Remove", role: .destructive) {
-                viewModel.deleteFingerprint(fingerprint)
+                Task {
+                    await viewModel.deleteFingerprint(fingerprint)
+                }
                 pendingDelete = nil
             }
             Button("Cancel", role: .cancel) {

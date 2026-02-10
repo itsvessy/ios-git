@@ -10,6 +10,7 @@ struct RepoFilesView: View {
     @State private var showHiddenItems = false
     @State private var includeDirectories = false
     @State private var searchQuery = ""
+    @State private var loadTask: Task<Void, Never>?
 
     var body: some View {
         List {
@@ -85,20 +86,23 @@ struct RepoFilesView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    loadEntries()
+                    scheduleLoadEntries()
                 } label: {
                     Label("Refresh Files", systemImage: "arrow.clockwise")
                 }
             }
         }
         .task {
-            loadEntries()
+            scheduleLoadEntries()
         }
         .onChange(of: showHiddenItems) { _, _ in
-            loadEntries()
+            scheduleLoadEntries()
         }
         .onChange(of: includeDirectories) { _, _ in
-            loadEntries()
+            scheduleLoadEntries()
+        }
+        .onDisappear {
+            loadTask?.cancel()
         }
     }
 
@@ -113,25 +117,94 @@ struct RepoFilesView: View {
         }
     }
 
-    private func loadEntries() {
-        errorMessage = nil
-        let scopedRoot: ScopedRoot
+    private func scheduleLoadEntries() {
+        loadTask?.cancel()
 
-        do {
-            scopedRoot = try resolveScopedRoot()
-        } catch {
-            entries = []
-            errorMessage = error.localizedDescription
+        let currentRepo = repo
+        let includeHidden = showHiddenItems
+        let includeFolders = includeDirectories
+
+        loadTask = Task {
+            await loadEntries(
+                repo: currentRepo,
+                showHiddenItems: includeHidden,
+                includeDirectories: includeFolders
+            )
+        }
+    }
+
+    private func loadEntries(repo: RepoRecord, showHiddenItems: Bool, includeDirectories: Bool) async {
+        let result = await RepoFilesLoader.shared.load(
+            repo: repo,
+            showHiddenItems: showHiddenItems,
+            includeDirectories: includeDirectories
+        )
+
+        guard !Task.isCancelled else {
             return
+        }
+
+        switch result {
+        case let .success(loadedEntries):
+            errorMessage = nil
+            entries = loadedEntries
+        case let .failure(message):
+            entries = []
+            errorMessage = message
+        case .cancelled:
+            break
+        }
+    }
+}
+
+private struct WorkingTreeEntry: Identifiable, Sendable {
+    let relativePath: String
+    let url: URL
+    let isDirectory: Bool
+    let fileSize: Int64?
+
+    var id: String { relativePath }
+}
+
+private struct ScopedRoot: Sendable {
+    let url: URL
+    let didStartSecurityScope: Bool
+}
+
+private enum RepoFilesLoadResult: Sendable {
+    case success([WorkingTreeEntry])
+    case failure(String)
+    case cancelled
+}
+
+private actor RepoFilesLoader {
+    static let shared = RepoFilesLoader()
+
+    private let fileManager = FileManager.default
+
+    func load(
+        repo: RepoRecord,
+        showHiddenItems: Bool,
+        includeDirectories: Bool
+    ) -> RepoFilesLoadResult {
+        if Task.isCancelled {
+            return .cancelled
+        }
+
+        let scopedRoot: ScopedRoot
+        do {
+            scopedRoot = try resolveScopedRoot(for: repo)
+        } catch {
+            return .failure(error.localizedDescription)
         }
         defer {
-            scopedRoot.stopAccess()
+            if scopedRoot.didStartSecurityScope {
+                scopedRoot.url.stopAccessingSecurityScopedResource()
+            }
         }
 
-        guard FileManager.default.fileExists(atPath: scopedRoot.url.path) else {
-            entries = []
-            errorMessage = "Repository folder does not exist at \(scopedRoot.url.path)."
-            return
+        guard fileManager.fileExists(atPath: scopedRoot.url.path) else {
+            return .failure("Repository folder does not exist at \(scopedRoot.url.path).")
         }
 
         let keys: Set<URLResourceKey> = [.isDirectoryKey, .fileSizeKey]
@@ -140,18 +213,20 @@ struct RepoFilesView: View {
             options.insert(.skipsHiddenFiles)
         }
 
-        guard let enumerator = FileManager.default.enumerator(
+        guard let enumerator = fileManager.enumerator(
             at: scopedRoot.url,
             includingPropertiesForKeys: Array(keys),
             options: options
         ) else {
-            entries = []
-            errorMessage = "Unable to enumerate repository files."
-            return
+            return .failure("Unable to enumerate repository files.")
         }
 
         var loaded: [WorkingTreeEntry] = []
         while let item = enumerator.nextObject() as? URL {
+            if Task.isCancelled {
+                return .cancelled
+            }
+
             let relativePath = item.path.replacingOccurrences(of: scopedRoot.url.path + "/", with: "")
             if relativePath.isEmpty || relativePath == "." {
                 continue
@@ -189,15 +264,17 @@ struct RepoFilesView: View {
             )
         }
 
-        entries = loaded.sorted { lhs, rhs in
+        let sorted = loaded.sorted { lhs, rhs in
             if lhs.isDirectory != rhs.isDirectory {
                 return lhs.isDirectory && !rhs.isDirectory
             }
             return lhs.relativePath.localizedCaseInsensitiveCompare(rhs.relativePath) == .orderedAscending
         }
+
+        return .success(sorted)
     }
 
-    private func resolveScopedRoot() throws -> ScopedRoot {
+    private func resolveScopedRoot(for repo: RepoRecord) throws -> ScopedRoot {
         if let bookmarkData = repo.securityScopedBookmark {
             var isStale = false
             let resolvedURL: URL
@@ -214,27 +291,12 @@ struct RepoFilesView: View {
             _ = isStale
 
             let started = resolvedURL.startAccessingSecurityScopedResource()
-            return ScopedRoot(url: resolvedURL) {
-                if started {
-                    resolvedURL.stopAccessingSecurityScopedResource()
-                }
-            }
+            return ScopedRoot(url: resolvedURL, didStartSecurityScope: started)
         }
 
-        return ScopedRoot(url: URL(fileURLWithPath: repo.localPath, isDirectory: true)) {}
+        return ScopedRoot(
+            url: URL(fileURLWithPath: repo.localPath, isDirectory: true),
+            didStartSecurityScope: false
+        )
     }
-}
-
-private struct WorkingTreeEntry: Identifiable {
-    let relativePath: String
-    let url: URL
-    let isDirectory: Bool
-    let fileSize: Int64?
-
-    var id: String { relativePath }
-}
-
-private struct ScopedRoot {
-    let url: URL
-    let stopAccess: () -> Void
 }

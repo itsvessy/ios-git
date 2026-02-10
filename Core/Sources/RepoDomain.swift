@@ -182,6 +182,7 @@ public struct SSHCredentialMaterial: Sendable {
 }
 
 public protocol GitClient: Sendable {
+    func prepareRemote(_ remoteURL: String) async throws -> RemoteProbeResult
     func clone(_ request: CloneRequest) async throws -> RepoRecord
     func sync(_ repo: RepoRecord, trigger: SyncTrigger) async throws -> SyncResult
     func probeRemote(_ remoteURL: String) async throws -> RemoteProbeResult

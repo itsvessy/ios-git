@@ -6,9 +6,9 @@ actor StoreCredentialProvider: SSHCredentialProvider {
     typealias LookupKey = @Sendable (_ host: String) async throws -> SSHKeyRecord?
 
     private let lookupKey: LookupKey
-    private let keyManager: SSHKeyManager
+    private let keyManager: any SSHKeyManaging
 
-    init(lookupKey: @escaping LookupKey, keyManager: SSHKeyManager) {
+    init(lookupKey: @escaping LookupKey, keyManager: any SSHKeyManaging) {
         self.lookupKey = lookupKey
         self.keyManager = keyManager
     }
@@ -18,10 +18,16 @@ actor StoreCredentialProvider: SSHCredentialProvider {
             throw RepoError.keyNotFound
         }
 
-        let privateKey = try keyManager.loadPrivateKey(reference: key.keychainPrivateRef)
+        let privateKey = try keyManager.loadPrivateKey(
+            reference: key.keychainPrivateRef,
+            prompt: "Authenticate to use your SSH private key"
+        )
         var passphrase: String?
         if let passphraseRef = key.keychainPassphraseRef {
-            passphrase = try keyManager.loadPassphrase(reference: passphraseRef)
+            passphrase = try keyManager.loadPassphrase(
+                reference: passphraseRef,
+                prompt: "Authenticate to use your SSH key passphrase"
+            )
         }
 
         return SSHCredentialMaterial(

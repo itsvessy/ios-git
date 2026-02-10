@@ -59,7 +59,9 @@ struct SSHKeysManagementView: View {
 
                                     if viewModel.defaultKeyID(for: key.host) != key.id {
                                         Button("Set Default") {
-                                            viewModel.setDefaultKey(host: key.host, keyID: key.id)
+                                            Task {
+                                                await viewModel.setDefaultKey(host: key.host, keyID: key.id)
+                                            }
                                         }
                                         .buttonStyle(.borderedProminent)
                                     }
@@ -96,7 +98,9 @@ struct SSHKeysManagementView: View {
             presenting: pendingDelete
         ) { key in
             Button("Delete", role: .destructive) {
-                viewModel.deleteKey(key)
+                Task {
+                    await viewModel.deleteKey(key)
+                }
                 pendingDelete = nil
             }
             Button("Cancel", role: .cancel) {

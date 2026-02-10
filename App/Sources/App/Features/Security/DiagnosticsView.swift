@@ -38,7 +38,9 @@ struct DiagnosticsView: View {
                 }
 
                 Button {
-                    viewModel.refresh()
+                    Task {
+                        await viewModel.refresh()
+                    }
                 } label: {
                     Label("Refresh Diagnostics", systemImage: "arrow.clockwise")
                 }

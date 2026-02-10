@@ -10,6 +10,7 @@ struct RootView: View {
     @ObservedObject var hostTrustPrompter: HostTrustPrompter
     @ObservedObject var securityViewModel: SecurityCenterViewModel
     @ObservedObject var bannerCenter: AppBannerCenter
+    let keyboardWarmupCoordinator: KeyboardWarmupCoordinator
 
     @State private var selectedSection: RootSidebarSection? = .repositories
 
@@ -43,6 +44,12 @@ struct RootView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: bannerCenter.banner?.id)
+        .onAppear {
+            keyboardWarmupCoordinator.warmupIfNeeded(isUnlocked: appLock.isUnlocked)
+        }
+        .onChange(of: appLock.isUnlocked) { _, isUnlocked in
+            keyboardWarmupCoordinator.warmupIfNeeded(isUnlocked: isUnlocked)
+        }
     }
 
     @ViewBuilder

@@ -90,6 +90,32 @@ public final class RepoStore {
         try context.save()
     }
 
+    public func listFingerprints() throws -> [HostFingerprintRecord] {
+        let descriptor = FetchDescriptor<HostFingerprintEntity>(
+            sortBy: [
+                SortDescriptor(\.host, order: .forward),
+                SortDescriptor(\.port, order: .forward),
+                SortDescriptor(\.algorithm, order: .forward)
+            ]
+        )
+        return try context.fetch(descriptor).map { $0.toRecord() }
+    }
+
+    public func deleteFingerprint(host: String, port: Int, algorithm: String) throws {
+        let lookup = HostFingerprintEntity.makeLookupKey(host: host, port: port, algorithm: algorithm)
+        let predicate = #Predicate<HostFingerprintEntity> { entity in
+            entity.lookupKey == lookup
+        }
+        var descriptor = FetchDescriptor(predicate: predicate)
+        descriptor.fetchLimit = 1
+
+        guard let existing = try context.fetch(descriptor).first else {
+            return
+        }
+        context.delete(existing)
+        try context.save()
+    }
+
     public func listKeys(host: String? = nil) throws -> [SSHKeyRecord] {
         let descriptor: FetchDescriptor<SSHKeyEntity>
         if let host {
@@ -144,6 +170,47 @@ public final class RepoStore {
         }
 
         try context.save()
+    }
+
+    public func setDefaultKey(host: String, keyID: UUID) throws {
+        let hostLower = host.lowercased()
+        let predicate = #Predicate<SSHKeyEntity> { entity in
+            entity.hostLookup == hostLower
+        }
+        let entries = try context.fetch(FetchDescriptor(predicate: predicate))
+        guard entries.contains(where: { $0.id == keyID }) else {
+            throw RepoError.keyNotFound
+        }
+
+        for entry in entries {
+            entry.isHostDefault = entry.id == keyID
+        }
+        try context.save()
+    }
+
+    public func deleteKey(id: UUID) throws -> SSHKeyRecord? {
+        guard let entity = try fetchKeyEntity(id: id) else {
+            return nil
+        }
+
+        let removed = entity.toRecord()
+        let hostLookup = entity.hostLookup
+        let removedWasDefault = entity.isHostDefault
+        context.delete(entity)
+
+        if removedWasDefault {
+            let predicate = #Predicate<SSHKeyEntity> { entry in
+                entry.hostLookup == hostLookup
+            }
+            let remaining = try context.fetch(FetchDescriptor(predicate: predicate))
+                .sorted { lhs, rhs in
+                    lhs.label.localizedCaseInsensitiveCompare(rhs.label) == .orderedAscending
+                }
+            remaining.first?.isHostDefault = true
+        }
+
+        try context.save()
+        return removed
     }
 
     public func defaultKey(host: String) throws -> SSHKeyRecord? {

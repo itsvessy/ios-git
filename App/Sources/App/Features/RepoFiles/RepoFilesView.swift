@@ -9,50 +9,50 @@ struct RepoFilesView: View {
     @State private var errorMessage: String?
     @State private var showHiddenItems = false
     @State private var includeDirectories = false
+    @State private var searchQuery = ""
 
     var body: some View {
         List {
-            Section {
+            Section("Repository Root") {
                 Text(repo.localPath)
-                    .font(.caption)
+                    .font(AppTypography.captionMonospaced)
                     .foregroundStyle(.secondary)
                     .textSelection(.enabled)
-            } header: {
-                Text("Repository Root")
             }
 
             if let errorMessage {
-                Section {
+                Section("Error") {
                     Text(errorMessage)
-                        .font(.footnote)
-                        .foregroundStyle(.red)
-                } header: {
-                    Text("Error")
+                        .font(AppTypography.caption)
+                        .foregroundStyle(AppColorTokens.error)
                 }
-            } else if entries.isEmpty {
+            } else if visibleEntries.isEmpty {
                 Section {
-                    ContentUnavailableView(
-                        "No Files",
+                    AppEmptyState(
+                        title: entries.isEmpty ? "No Files" : "No Matches",
                         systemImage: "doc",
-                        description: Text("No visible files were found with the current filters.")
+                        description: entries.isEmpty
+                            ? "No visible files were found with current filters."
+                            : "Try a different search query."
                     )
                 }
             } else {
-                Section {
-                    ForEach(entries) { entry in
-                        HStack(spacing: 12) {
-                            Image(systemName: entry.isDirectory ? "folder" : "doc.text")
-                                .foregroundStyle(entry.isDirectory ? .yellow : .secondary)
+                Section("\(includeDirectories ? "Working Tree" : "Files") (\(visibleEntries.count))") {
+                    ForEach(visibleEntries) { entry in
+                        HStack(spacing: AppSpacingTokens.medium) {
+                            Image(systemName: entry.isDirectory ? "folder.fill" : "doc.text")
+                                .foregroundStyle(entry.isDirectory ? AppColorTokens.accent : .secondary)
+                                .frame(width: 22)
 
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(entry.relativePath)
-                                    .font(.subheadline)
+                                    .font(AppTypography.body)
                                     .lineLimit(1)
                                     .truncationMode(.middle)
                                     .textSelection(.enabled)
                                 if let bytes = entry.fileSize {
                                     Text(ByteCountFormatter.string(fromByteCount: bytes, countStyle: .file))
-                                        .font(.caption)
+                                        .font(AppTypography.caption)
                                         .foregroundStyle(.secondary)
                                 }
                             }
@@ -68,13 +68,12 @@ struct RepoFilesView: View {
                             }
                         }
                     }
-                } header: {
-                    Text("\(includeDirectories ? "Working Tree" : "Files") (\(entries.count))")
                 }
             }
         }
         .navigationTitle(repo.displayName)
         .navigationBarTitleDisplayMode(.inline)
+        .searchable(text: $searchQuery, prompt: "Search files")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -100,6 +99,17 @@ struct RepoFilesView: View {
         }
         .onChange(of: includeDirectories) { _, _ in
             loadEntries()
+        }
+    }
+
+    private var visibleEntries: [WorkingTreeEntry] {
+        let query = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !query.isEmpty else {
+            return entries
+        }
+
+        return entries.filter { entry in
+            entry.relativePath.lowercased().contains(query)
         }
     }
 

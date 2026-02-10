@@ -124,3 +124,16 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.Tests
         GENERATE_INFOPLIST_FILE: true
+
+  GitPhoneUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: GitPhoneUITests
+    dependencies:
+      - target: GitPhone
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.UITests
+        GENERATE_INFOPLIST_FILE: true

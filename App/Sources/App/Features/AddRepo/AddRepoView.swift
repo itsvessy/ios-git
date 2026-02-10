@@ -1,3 +1,4 @@
+import Core
 import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
@@ -7,7 +8,6 @@ struct AddRepoView: View {
     @Environment(\.dismiss) private var dismiss
 
     @ObservedObject var viewModel: RepoListViewModel
-    @ObservedObject var hostTrustPrompter: HostTrustPrompter
 
     @State private var displayName = ""
     @State private var remoteURL = ""
@@ -18,136 +18,180 @@ struct AddRepoView: View {
     @State private var selectedCloneRootURL: URL?
     @State private var selectedCloneRootBookmark: Data?
     @State private var isPresentingFolderPicker = false
+    @State private var isShowingAdvanced = false
+    @State private var submitError: String?
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("Repository") {
-                    TextField("Display Name", text: $displayName)
-                        .textInputAutocapitalization(.never)
-                    TextField("SSH Remote URL", text: $remoteURL)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                    TextField("Tracked Branch", text: $trackedBranch)
-                        .textInputAutocapitalization(.never)
+        Form {
+            Section("Repository") {
+                TextField("SSH Remote URL", text: $remoteURL)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .accessibilityIdentifier("add-remote-url")
+
+                if let remoteValidationError {
+                    Text(remoteValidationError)
+                        .font(AppTypography.caption)
+                        .foregroundStyle(AppColorTokens.error)
+                }
+
+                TextField("Tracked Branch", text: $trackedBranch)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .accessibilityIdentifier("add-tracked-branch")
+
+                TextField("Display Name (optional)", text: $displayName)
+
+                LabeledContent("Preview") {
+                    Text(normalizedName)
+                        .font(AppTypography.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Section {
+                DisclosureGroup("Advanced Options", isExpanded: $isShowingAdvanced) {
                     Toggle("Enable Auto-Sync", isOn: $autoSyncEnabled)
-                }
+                        .padding(.top, AppSpacingTokens.small)
 
-                Section("Clone Location") {
-                    if let selectedCloneRootURL {
-                        Text(selectedCloneRootURL.path)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .textSelection(.enabled)
-                            .lineLimit(2)
-                    } else {
-                        Text("Default: GitPhone Documents/Repositories")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
+                    cloneLocationContent
+                        .padding(.top, AppSpacingTokens.small)
 
-                    Button("Choose Folder in Files") {
-                        isPresentingFolderPicker = true
-                    }
+                    Toggle("Generate SSH key if missing", isOn: $generateKeyIfNeeded)
 
-                    if selectedCloneRootURL != nil {
-                        Button("Use Default Location") {
-                            selectedCloneRootURL = nil
-                            selectedCloneRootBookmark = nil
-                        }
-                    }
-                }
-
-                Section("SSH Key") {
-                    Toggle("Generate host key if missing", isOn: $generateKeyIfNeeded)
                     if generateKeyIfNeeded {
                         SecureField("Optional key passphrase", text: $passphrase)
                     }
                 }
+            }
 
-                Section {
-                    Text("Background sync is best-effort and iOS may delay or skip runs.")
-                        .font(.footnote)
+            Section {
+                if let reason = cloneDisabledReason {
+                    Text(reason)
+                        .font(AppTypography.caption)
                         .foregroundStyle(.secondary)
                 }
-            }
-            .navigationTitle("Add Repository")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+
+                if let submitError {
+                    Text(submitError)
+                        .font(AppTypography.caption)
+                        .foregroundStyle(AppColorTokens.error)
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Clone") {
-                        Task {
-                            await viewModel.addRepo(
-                                displayName: normalizedName,
-                                remoteURL: remoteURL,
-                                trackedBranch: trackedBranch,
-                                autoSyncEnabled: autoSyncEnabled,
-                                generateKeyIfNeeded: generateKeyIfNeeded,
-                                passphrase: passphrase.nonEmpty,
-                                cloneRootURL: selectedCloneRootURL,
-                                cloneRootBookmark: selectedCloneRootBookmark
-                            )
-                            if viewModel.statusMessage?.hasPrefix("Added") == true {
-                                dismiss()
-                            }
+
+                Text("Background sync is best-effort and iOS may delay or skip runs.")
+                    .font(AppTypography.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .navigationTitle("Add Repository")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") { dismiss() }
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Clone") {
+                    Task {
+                        submitError = nil
+                        let success = await viewModel.addRepo(
+                            displayName: normalizedName,
+                            remoteURL: remoteURL,
+                            trackedBranch: trackedBranch,
+                            autoSyncEnabled: autoSyncEnabled,
+                            generateKeyIfNeeded: generateKeyIfNeeded,
+                            passphrase: passphrase.nonEmpty,
+                            cloneRootURL: selectedCloneRootURL,
+                            cloneRootBookmark: selectedCloneRootBookmark
+                        )
+                        if success {
+                            dismiss()
+                        } else {
+                            submitError = "Clone failed. Review the latest banner for details."
                         }
                     }
-                    .disabled(!canSubmit || viewModel.isWorking)
                 }
+                .disabled(cloneDisabledReason != nil || viewModel.isAddingRepo)
+                .accessibilityIdentifier("clone-button")
             }
-            .overlay {
-                if let request = hostTrustPrompter.pendingRequest {
-                    Color.black.opacity(0.35)
-                        .ignoresSafeArea()
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Trust SSH Host")
-                            .font(.headline)
-                        Text("Host: \(request.host)")
-                            .font(.subheadline)
-                        Text("Algorithm: \(request.algorithm)")
-                            .font(.subheadline)
-                        Text("Fingerprint:")
-                            .font(.subheadline)
-                        Text(request.fingerprint)
-                            .font(.footnote)
-                            .textSelection(.enabled)
-
-                        HStack {
-                            Button("Reject", role: .destructive) {
-                                hostTrustPrompter.reject()
-                            }
-                            Spacer()
-                            Button("Trust & Pin") {
-                                hostTrustPrompter.approve()
-                            }
-                            .buttonStyle(.borderedProminent)
-                        }
-                    }
-                    .padding()
-                    .background(.thinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .padding()
+        }
+        .sheet(isPresented: $isPresentingFolderPicker) {
+            FolderPicker(
+                onPick: { pickedURL in
+                    cacheCloneRoot(url: pickedURL)
+                    isPresentingFolderPicker = false
+                },
+                onCancel: {
+                    isPresentingFolderPicker = false
                 }
+            )
+        }
+    }
+
+    @ViewBuilder
+    private var cloneLocationContent: some View {
+        VStack(alignment: .leading, spacing: AppSpacingTokens.small) {
+            if let selectedCloneRootURL {
+                Text(selectedCloneRootURL.path)
+                    .font(AppTypography.caption)
+                    .foregroundStyle(.secondary)
+                    .textSelection(.enabled)
+                    .lineLimit(2)
+            } else {
+                Text("Default: GitPhone Documents/Repositories")
+                    .font(AppTypography.caption)
+                    .foregroundStyle(.secondary)
             }
-            .sheet(isPresented: $isPresentingFolderPicker) {
-                FolderPicker(
-                    onPick: { pickedURL in
-                        cacheCloneRoot(url: pickedURL)
-                        isPresentingFolderPicker = false
-                    },
-                    onCancel: {
-                        isPresentingFolderPicker = false
+
+            HStack {
+                Button("Choose Folder in Files") {
+                    isPresentingFolderPicker = true
+                }
+                if selectedCloneRootURL != nil {
+                    Button("Use Default Location") {
+                        selectedCloneRootURL = nil
+                        selectedCloneRootBookmark = nil
                     }
-                )
+                }
             }
         }
     }
 
-    private var canSubmit: Bool {
-        !normalizedName.isEmpty && !remoteURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !trackedBranch.isEmpty
+    private var cloneDisabledReason: String? {
+        if viewModel.isAddingRepo {
+            return "Clone is already in progress."
+        }
+
+        if remoteURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return "Enter a remote SSH URL."
+        }
+
+        if let remoteValidationError {
+            return remoteValidationError
+        }
+
+        if trackedBranch.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return "Enter a tracked branch."
+        }
+
+        if normalizedName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return "Enter a display name or valid remote URL."
+        }
+
+        return nil
+    }
+
+    private var remoteValidationError: String? {
+        let trimmed = remoteURL.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            return nil
+        }
+
+        do {
+            _ = try SSHRemoteURL(parse: trimmed)
+            return nil
+        } catch {
+            return error.localizedDescription
+        }
     }
 
     private var normalizedName: String {
@@ -155,6 +199,7 @@ struct AddRepoView: View {
         if !trimmed.isEmpty {
             return trimmed
         }
+
         return remoteURL
             .split(separator: "/")
             .last
@@ -179,7 +224,7 @@ struct AddRepoView: View {
             selectedCloneRootURL = url
             selectedCloneRootBookmark = bookmarkData
         } catch {
-            viewModel.statusMessage = "Could not save folder access: \(error.localizedDescription)"
+            submitError = "Could not save folder access: \(error.localizedDescription)"
             selectedCloneRootURL = nil
             selectedCloneRootBookmark = nil
         }

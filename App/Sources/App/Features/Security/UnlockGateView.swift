@@ -8,36 +8,48 @@ struct UnlockGateView: View {
     @State private var unlockError: String?
 
     var body: some View {
-        VStack(spacing: 20) {
-            Image(systemName: "lock.shield")
-                .font(.system(size: 56, weight: .semibold))
-                .foregroundStyle(.tint)
+        VStack(spacing: AppSpacingTokens.large) {
+            Spacer()
 
-            Text("GitPhone Locked")
-                .font(.title2.bold())
+            AppCard {
+                VStack(spacing: AppSpacingTokens.large) {
+                    Image(systemName: "lock.shield")
+                        .font(.system(size: 52, weight: .semibold))
+                        .foregroundStyle(AppColorTokens.accent)
 
-            Text("Authenticate to access repositories and SSH credentials.")
-                .multilineTextAlignment(.center)
-                .foregroundStyle(.secondary)
+                    Text("GitPhone Locked")
+                        .font(.title2.weight(.semibold))
 
-            if let unlockError {
-                Text(unlockError)
-                    .foregroundStyle(.red)
-                    .font(.footnote)
-            }
+                    Text("Authenticate to access repositories and SSH credentials.")
+                        .font(AppTypography.body)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
 
-            Button {
-                Task {
-                    await unlock()
+                    if let unlockError {
+                        Text(unlockError)
+                            .font(AppTypography.caption)
+                            .foregroundStyle(AppColorTokens.error)
+                    }
+
+                    Button {
+                        Task {
+                            await unlock()
+                        }
+                    } label: {
+                        Label("Unlock", systemImage: "faceid")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(isUnlocking)
+                    .accessibilityIdentifier("unlock-button")
                 }
-            } label: {
-                Label("Unlock", systemImage: "faceid")
-                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.borderedProminent)
-            .disabled(isUnlocking)
+            .frame(maxWidth: 420)
+
+            Spacer()
         }
-        .padding(24)
+        .padding(AppSpacingTokens.xLarge)
+        .background(AppColorTokens.surfaceBackground)
         .task {
             if !appLock.isUnlocked {
                 await unlock()

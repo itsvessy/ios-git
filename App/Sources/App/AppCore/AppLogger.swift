@@ -44,4 +44,14 @@ actor AppLogger {
     func logFilePath() -> String {
         logURL.path
     }
+
+    func logFileURL() -> URL {
+        logURL
+    }
+
+    func clearLogFile() throws {
+        if FileManager.default.fileExists(atPath: logURL.path) {
+            try FileManager.default.removeItem(at: logURL)
+        }
+    }
 }

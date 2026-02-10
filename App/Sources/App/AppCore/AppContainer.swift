@@ -14,7 +14,9 @@ final class AppContainer: ObservableObject {
     let keyManager: SSHKeyManager
     let appLock: AppLockCoordinator
     let hostTrustPrompter: HostTrustPrompter
+    let bannerCenter: AppBannerCenter
     let viewModel: RepoListViewModel
+    let securityCenterViewModel: SecurityCenterViewModel
 
     private let backgroundSyncCoordinator: BackgroundSyncCoordinator
 
@@ -27,6 +29,11 @@ final class AppContainer: ObservableObject {
         keyManager = SSHKeyManager()
         appLock = AppLockCoordinator(relockInterval: 30 * 60)
         hostTrustPrompter = HostTrustPrompter()
+        bannerCenter = AppBannerCenter()
+
+        if ProcessInfo.processInfo.arguments.contains("UITEST_BYPASS_LOCK") {
+            appLock.markUnlocked()
+        }
 
         let trustEvaluator = FingerprintPinningPolicy(
             lookup: { [repoStore] host, port, algorithm in
@@ -62,7 +69,16 @@ final class AppContainer: ObservableObject {
             repoStore: repoStore,
             gitClient: gitClient,
             logger: logger,
-            keyManager: keyManager
+            keyManager: keyManager,
+            bannerCenter: bannerCenter
+        )
+
+        securityCenterViewModel = SecurityCenterViewModel(
+            repoStore: repoStore,
+            keyManager: keyManager,
+            logger: logger,
+            appLock: appLock,
+            bannerCenter: bannerCenter
         )
 
         backgroundSyncCoordinator = BackgroundSyncCoordinator(

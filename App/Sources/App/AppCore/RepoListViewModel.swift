@@ -1,29 +1,101 @@
 import Core
+import Combine
 import Foundation
 import GitEngine
 import SecurityEngine
 import Storage
-import SwiftData
 
 @MainActor
 final class RepoListViewModel: ObservableObject {
     @Published private(set) var repos: [RepoRecord] = []
     @Published private(set) var sshKeys: [SSHKeyRecord] = []
-    @Published var isPresentingAddRepo = false
-    @Published var isPresentingPublicKeys = false
-    @Published var isWorking = false
-    @Published var statusMessage: String?
+    @Published private(set) var isAddingRepo = false
+    @Published private(set) var syncingRepoIDs: Set<RepoID> = []
+
+    @Published var searchQuery = ""
+    @Published var sortMode: RepoSortMode = .name
+    @Published var stateFilter: RepoStateFilter = .all
 
     private let repoStore: RepoStore
     private let gitClient: GitClient
     private let logger: AppLogger
     private let keyManager: SSHKeyManager
+    private let bannerCenter: AppBannerCenter
 
-    init(repoStore: RepoStore, gitClient: GitClient, logger: AppLogger, keyManager: SSHKeyManager) {
+    init(
+        repoStore: RepoStore,
+        gitClient: GitClient,
+        logger: AppLogger,
+        keyManager: SSHKeyManager,
+        bannerCenter: AppBannerCenter
+    ) {
         self.repoStore = repoStore
         self.gitClient = gitClient
         self.logger = logger
         self.keyManager = keyManager
+        self.bannerCenter = bannerCenter
+    }
+
+    var visibleRepos: [RepoRecord] {
+        let filtered = repos.filter { repo in
+            guard stateFilter.matches(state: repo.lastSyncState) else {
+                return false
+            }
+
+            let query = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !query.isEmpty else {
+                return true
+            }
+
+            let lowered = query.lowercased()
+            return repo.displayName.lowercased().contains(lowered)
+                || repo.remoteURL.lowercased().contains(lowered)
+                || repo.trackedBranch.lowercased().contains(lowered)
+        }
+
+        switch sortMode {
+        case .name:
+            return filtered.sorted {
+                $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending
+            }
+        case .lastSync:
+            return filtered.sorted { lhs, rhs in
+                switch (lhs.lastSyncAt, rhs.lastSyncAt) {
+                case let (left?, right?):
+                    if left == right {
+                        return lhs.displayName.localizedCaseInsensitiveCompare(rhs.displayName) == .orderedAscending
+                    }
+                    return left > right
+                case (nil, nil):
+                    return lhs.displayName.localizedCaseInsensitiveCompare(rhs.displayName) == .orderedAscending
+                case (.some, nil):
+                    return true
+                case (nil, .some):
+                    return false
+                }
+            }
+        case .syncState:
+            return filtered.sorted { lhs, rhs in
+                let lhsRank = syncRank(for: lhs.lastSyncState)
+                let rhsRank = syncRank(for: rhs.lastSyncState)
+                if lhsRank == rhsRank {
+                    return lhs.displayName.localizedCaseInsensitiveCompare(rhs.displayName) == .orderedAscending
+                }
+                return lhsRank < rhsRank
+            }
+        }
+    }
+
+    func count(for filter: RepoStateFilter) -> Int {
+        repos.filter { filter.matches(state: $0.lastSyncState) }.count
+    }
+
+    func repo(withID id: RepoID) -> RepoRecord? {
+        repos.first(where: { $0.id == id })
+    }
+
+    func isSyncing(repoID: RepoID) -> Bool {
+        syncingRepoIDs.contains(repoID)
     }
 
     func refresh() {
@@ -31,11 +103,12 @@ final class RepoListViewModel: ObservableObject {
             repos = try repoStore.listRepos()
             sshKeys = try repoStore.listKeys()
         } catch {
-            statusMessage = error.localizedDescription
+            publish("Failed loading repositories: \(error.localizedDescription)", kind: .error)
             Task { await logger.log("Failed loading repos: \(error)", level: .error) }
         }
     }
 
+    @discardableResult
     func addRepo(
         displayName: String,
         remoteURL: String,
@@ -45,9 +118,10 @@ final class RepoListViewModel: ObservableObject {
         passphrase: String?,
         cloneRootURL: URL? = nil,
         cloneRootBookmark: Data? = nil
-    ) async {
-        isWorking = true
-        defer { isWorking = false }
+    ) async -> Bool {
+        isAddingRepo = true
+        defer { isAddingRepo = false }
+
         var generatedNewKey = false
 
         do {
@@ -73,12 +147,14 @@ final class RepoListViewModel: ObservableObject {
             try repoStore.upsert(repo)
             repos = try repoStore.listRepos()
             sshKeys = try repoStore.listKeys()
+
             if generatedNewKey {
-                statusMessage = "Added \(repo.displayName). New SSH key created for \(parsed.host)."
+                publish("Added \(repo.displayName). Generated a new key for \(parsed.host).", kind: .success)
             } else {
-                statusMessage = "Added \(repo.displayName)."
+                publish("Added \(repo.displayName).", kind: .success)
             }
             await logger.log("Cloned repo \(repo.displayName) at \(repo.localPath)")
+            return true
         } catch {
             do {
                 repos = try repoStore.listRepos()
@@ -86,23 +162,32 @@ final class RepoListViewModel: ObservableObject {
             } catch {
                 await logger.log("State refresh after add failure failed: \(error)", level: .error)
             }
+
             if let repoError = error as? RepoError,
                case .syncBlocked = repoError {
                 if generatedNewKey {
-                    statusMessage = "SSH auth failed. A key was created, but the repository was not added yet. Add the key on your Git host, then use Add Repository again."
+                    publish(
+                        "SSH auth failed. A key was created, but the repository was not added.",
+                        kind: .warning
+                    )
                 } else {
-                    statusMessage = "SSH auth failed. The repository was not added. Verify key access, then use Add Repository again."
+                    publish(
+                        "SSH auth failed. The repository was not added.",
+                        kind: .error
+                    )
                 }
             } else {
-                statusMessage = error.localizedDescription
+                publish(error.localizedDescription, kind: .error)
             }
+
             await logger.log("Add repo failed: \(error)", level: .error)
+            return false
         }
     }
 
     func sync(repo: RepoRecord, trigger: SyncTrigger = .manual) async {
-        isWorking = true
-        defer { isWorking = false }
+        syncingRepoIDs.insert(repo.id)
+        defer { syncingRepoIDs.remove(repo.id) }
 
         var working = repo
         working.lastSyncState = .syncing
@@ -115,7 +200,13 @@ final class RepoListViewModel: ObservableObject {
             let result = try await gitClient.sync(repo, trigger: trigger)
             try repoStore.setSyncResult(repoID: repo.id, result: result)
             repos = try repoStore.listRepos()
-            statusMessage = result.message ?? "Sync completed."
+
+            if let message = result.message, !message.isEmpty {
+                publish(message, kind: result.state == .success ? .success : .info)
+            } else if result.state == .success {
+                publish("Sync completed.", kind: .success)
+            }
+
             await logger.log("Sync complete for \(repo.displayName): \(result.state.rawValue)")
         } catch {
             let mapped = map(error: error)
@@ -126,7 +217,7 @@ final class RepoListViewModel: ObservableObject {
                 await logger.log("Failed persisting sync error: \(error)", level: .error)
             }
 
-            statusMessage = mapped.message
+            publish(mapped.message ?? "Sync failed.", kind: .error)
             await logger.log("Sync failed for \(repo.displayName): \(mapped.message ?? "unknown")", level: .warning)
         }
     }
@@ -137,9 +228,8 @@ final class RepoListViewModel: ObservableObject {
         do {
             try repoStore.upsert(updated)
             repos = try repoStore.listRepos()
-            sshKeys = try repoStore.listKeys()
         } catch {
-            statusMessage = error.localizedDescription
+            publish(error.localizedDescription, kind: .error)
         }
     }
 
@@ -151,9 +241,9 @@ final class RepoListViewModel: ObservableObject {
                     try FileManager.default.removeItem(at: marker)
                 }
             }
-            statusMessage = "Local dirty marker cleared for \(repo.displayName)."
+            publish("Local dirty marker cleared for \(repo.displayName).", kind: .success)
         } catch {
-            statusMessage = "Could not clear local dirty marker: \(error.localizedDescription)"
+            publish("Could not clear local dirty marker: \(error.localizedDescription)", kind: .error)
         }
     }
 
@@ -165,9 +255,9 @@ final class RepoListViewModel: ObservableObject {
                     try FileManager.default.removeItem(at: marker)
                 }
             }
-            statusMessage = "Diverged marker cleared for \(repo.displayName)."
+            publish("Diverged marker cleared for \(repo.displayName).", kind: .success)
         } catch {
-            statusMessage = "Could not clear diverged marker: \(error.localizedDescription)"
+            publish("Could not clear diverged marker: \(error.localizedDescription)", kind: .error)
         }
     }
 
@@ -188,14 +278,16 @@ final class RepoListViewModel: ObservableObject {
 
             try repoStore.delete(repoID: repo.id)
             repos = try repoStore.listRepos()
-            sshKeys = try repoStore.listKeys()
 
             if removeFiles {
-                statusMessage = didDeleteFiles
-                    ? "Removed \(repo.displayName) and deleted local files."
-                    : "Removed \(repo.displayName). Local files were already missing."
+                publish(
+                    didDeleteFiles
+                        ? "Removed \(repo.displayName) and deleted local files."
+                        : "Removed \(repo.displayName). Local files were already missing.",
+                    kind: .success
+                )
             } else {
-                statusMessage = "Removed \(repo.displayName) from GitPhone."
+                publish("Removed \(repo.displayName) from GitPhone.", kind: .success)
             }
 
             Task {
@@ -206,8 +298,31 @@ final class RepoListViewModel: ObservableObject {
                 }
             }
         } catch {
-            statusMessage = "Could not delete \(repo.displayName): \(error.localizedDescription)"
+            publish("Could not delete \(repo.displayName): \(error.localizedDescription)", kind: .error)
             Task { await logger.log("Delete repo failed: \(error)", level: .error) }
+        }
+    }
+
+    private func publish(_ message: String, kind: RepoBannerMessage.Kind) {
+        bannerCenter.show(RepoBannerMessage(text: message, kind: kind))
+    }
+
+    private func syncRank(for state: RepoSyncState) -> Int {
+        switch state {
+        case .syncing:
+            return 0
+        case .failed:
+            return 1
+        case .authFailed:
+            return 2
+        case .blockedDirty, .blockedDiverged, .hostMismatch:
+            return 3
+        case .networkDeferred:
+            return 4
+        case .idle:
+            return 5
+        case .success:
+            return 6
         }
     }
 

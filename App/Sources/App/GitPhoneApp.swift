@@ -11,8 +11,11 @@ struct GitPhoneApp: App {
             RootView(
                 appLock: container.appLock,
                 viewModel: container.viewModel,
-                hostTrustPrompter: container.hostTrustPrompter
+                hostTrustPrompter: container.hostTrustPrompter,
+                securityViewModel: container.securityCenterViewModel,
+                bannerCenter: container.bannerCenter
             )
+            .appTheme()
             .modelContainer(container.modelContainer)
         }
         .onChange(of: scenePhase) { _, newPhase in

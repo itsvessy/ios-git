@@ -95,10 +95,10 @@ public final class AppLockCoordinator: ObservableObject {
     @Published public private(set) var isUnlocked = false
 
     private var lastBackgroundDate: Date?
-    private let relockInterval: TimeInterval
+    private var relockIntervalSeconds: TimeInterval
 
     public init(relockInterval: TimeInterval = 30 * 60) {
-        self.relockInterval = relockInterval
+        self.relockIntervalSeconds = max(1, relockInterval)
     }
 
     public func handleBecameActive() {
@@ -106,7 +106,7 @@ public final class AppLockCoordinator: ObservableObject {
             return
         }
 
-        if Date().timeIntervalSince(lastBackgroundDate) >= relockInterval {
+        if Date().timeIntervalSince(lastBackgroundDate) >= relockIntervalSeconds {
             isUnlocked = false
         }
     }
@@ -122,6 +122,14 @@ public final class AppLockCoordinator: ObservableObject {
     public func lockNow() {
         isUnlocked = false
         lastBackgroundDate = Date()
+    }
+
+    public func setRelockInterval(_ interval: TimeInterval) {
+        relockIntervalSeconds = max(1, interval)
+    }
+
+    public func relockInterval() -> TimeInterval {
+        relockIntervalSeconds
     }
 
     public func unlock(prompt: String = "Unlock GitPhone") async -> Bool {

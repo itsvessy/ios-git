@@ -1,0 +1,44 @@
+{
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Helpers/LibGit2RawRepresentable.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/LibGit2RawRepresentable.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/LibGit2RawRepresentable.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/LibGit2RawRepresentable.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/LibGit2RawRepresentable.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/LibGit2RawRepresentable.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Helpers/RemoteCallbacks.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/RemoteCallbacks.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/RemoteCallbacks.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/RemoteCallbacks.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/RemoteCallbacks.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/RemoteCallbacks.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Helpers/SwiftGitXError.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/SwiftGitXError.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/SwiftGitXError.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/SwiftGitXError.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/SwiftGitXError.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/SwiftGitXError.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Models/Diff/Diff.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/Diff.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/Diff.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/Diff.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/Diff.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/Diff.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Models/Diff/Patch.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/Patch.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/Patch.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/Patch.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/Patch.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/Patch.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Models/Diff/StatusEntry.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/StatusEntry.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/StatusEntry.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/StatusEntry.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/StatusEntry.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphoneos/SwiftGitX.build/Objects-normal/arm64/StatusEntry.swiftdeps"
+  }
+}

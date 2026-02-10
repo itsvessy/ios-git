@@ -1,0 +1,62 @@
+{
+  "object" : {
+    "artifacts" : [
+      {
+        "kind" : {
+          "xcframework" : {
+
+          }
+        },
+        "packageRef" : {
+          "identity" : "libssh2prebuild",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/DimaRU/Libssh2Prebuild.git",
+          "name" : "Libssh2Prebuild"
+        },
+        "path" : "/Users/vessy/ios-git/.derived-local/SourcePackages/artifacts/libssh2prebuild/CSSH/CSSH.xcframework",
+        "source" : {
+          "checksum" : "f2a14236019b617019f522001c89ad5db2125e8f350cbcde5ed6e96f50842157",
+          "type" : "remote",
+          "url" : "https://github.com/DimaRU/Libssh2Prebuild/releases/download/1.11.0-OpenSSL-1-1-1w/CSSH-1.11.0-OpenSSL-1-1-1w.xcframework.zip"
+        },
+        "targetName" : "CSSH"
+      }
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "libgit2",
+          "kind" : "fileSystem",
+          "location" : "/Users/vessy/ios-git/Vendor/libgit2",
+          "name" : "libgit2"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/vessy/ios-git/Vendor/libgit2"
+        },
+        "subpath" : "libgit2"
+      },
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "libssh2prebuild",
+          "kind" : "remoteSourceControl",
+          "location" : "https://github.com/DimaRU/Libssh2Prebuild.git",
+          "name" : "Libssh2Prebuild"
+        },
+        "state" : {
+          "checkoutState" : {
+            "revision" : "56e4285f64a34f543cba5d40805537ac927f9723"
+          },
+          "name" : "sourceControlCheckout"
+        },
+        "subpath" : "Libssh2Prebuild"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

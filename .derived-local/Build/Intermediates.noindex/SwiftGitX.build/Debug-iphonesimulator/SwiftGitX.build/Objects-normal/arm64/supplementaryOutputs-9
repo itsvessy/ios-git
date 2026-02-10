@@ -1,0 +1,44 @@
+{
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Collections/TagCollection.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/TagCollection.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/TagCollection.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/TagCollection.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/TagCollection.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/TagCollection.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Helpers/Constants.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/Constants.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/Constants.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/Constants.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/Constants.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/Constants.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Helpers/Extensions/Array+withGitStrArray.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/Array+withGitStrArray.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/Array+withGitStrArray.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/Array+withGitStrArray.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/Array+withGitStrArray.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/Array+withGitStrArray.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Helpers/Extensions/URL+relativePath.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/URL+relativePath.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/URL+relativePath.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/URL+relativePath.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/URL+relativePath.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/URL+relativePath.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Helpers/Factory/ObjectFactory.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/ObjectFactory.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/ObjectFactory.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/ObjectFactory.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/ObjectFactory.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/ObjectFactory.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Helpers/Factory/ReferenceFactory.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/ReferenceFactory.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/ReferenceFactory.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/ReferenceFactory.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/ReferenceFactory.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/ReferenceFactory.swiftdeps"
+  }
+}

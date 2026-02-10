@@ -1,0 +1,4 @@
+framework module BackgroundSync {
+  header "BackgroundSync-Swift.h"
+  requires objc
+}

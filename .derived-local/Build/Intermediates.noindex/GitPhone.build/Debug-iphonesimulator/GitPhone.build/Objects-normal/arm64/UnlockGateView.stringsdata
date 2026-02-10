@@ -1,0 +1,32 @@
+{
+  "source": "/Users/vessy/ios-git/App/Sources/App/Features/Security/UnlockGateView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "GitPhone Locked",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 16
+        }
+      },
+      {
+        "comment": "",
+        "key": "Authenticate to access repositories and SSH credentials.",
+        "location": {
+          "startingColumn": 18,
+          "startingLine": 19
+        }
+      },
+      {
+        "comment": "",
+        "key": "Unlock",
+        "location": {
+          "startingColumn": 23,
+          "startingLine": 34
+        }
+      }
+    ]
+  },
+  "version": 1
+}

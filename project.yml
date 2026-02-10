@@ -1,0 +1,126 @@
+name: GitPhone
+options:
+  minimumXcodeGenVersion: 2.38.0
+settings:
+  base:
+    SWIFT_VERSION: 6.0
+    IPHONEOS_DEPLOYMENT_TARGET: 18.0
+    DEVELOPMENT_TEAM: ""
+packages:
+  SwiftGitX:
+    path: Vendor/SwiftGitX
+targets:
+  GitPhone:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: App/Sources
+    resources:
+      - path: App/Resources
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: GitPhone
+        UILaunchStoryboardName: LaunchScreen
+        UIApplicationSupportsIndirectInputEvents: true
+        UIFileSharingEnabled: true
+        LSSupportsOpeningDocumentsInPlace: true
+        BGTaskSchedulerPermittedIdentifiers:
+          - com.vessy.GitPhone.sync
+        NSFaceIDUsageDescription: Authenticate to unlock the app and access encrypted key passphrases.
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone
+        GENERATE_INFOPLIST_FILE: false
+        SWIFT_EMIT_LOC_STRINGS: true
+    dependencies:
+      - target: Core
+      - target: Storage
+      - target: SecurityEngine
+      - target: GitEngine
+      - target: BackgroundSync
+
+  Core:
+    type: framework
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: Core/Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.Core
+        GENERATE_INFOPLIST_FILE: true
+
+  Storage:
+    type: framework
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: Storage/Sources
+    dependencies:
+      - target: Core
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.Storage
+        GENERATE_INFOPLIST_FILE: true
+
+  SecurityEngine:
+    type: framework
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: SecurityEngine/Sources
+    dependencies:
+      - target: Core
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.SecurityEngine
+        GENERATE_INFOPLIST_FILE: true
+
+  GitEngine:
+    type: framework
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: GitEngine/Sources
+    dependencies:
+      - target: Core
+      - package: SwiftGitX
+        product: SwiftGitX
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.GitEngine
+        GENERATE_INFOPLIST_FILE: true
+
+  BackgroundSync:
+    type: framework
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: BackgroundSync/Sources
+    dependencies:
+      - target: Core
+      - target: GitEngine
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.BackgroundSync
+        GENERATE_INFOPLIST_FILE: true
+
+  GitPhoneTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: GitPhoneTests
+    dependencies:
+      - target: GitPhone
+      - target: Core
+      - target: Storage
+      - target: SecurityEngine
+      - target: GitEngine
+      - target: BackgroundSync
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.Tests
+        GENERATE_INFOPLIST_FILE: true

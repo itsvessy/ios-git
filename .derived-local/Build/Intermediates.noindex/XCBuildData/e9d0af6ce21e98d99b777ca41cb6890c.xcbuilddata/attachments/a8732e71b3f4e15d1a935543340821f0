@@ -1,0 +1,12 @@
+/Users/vessy/ios-git/App/Sources/App/Features/AddRepo/AddRepoView.swift
+/Users/vessy/ios-git/App/Sources/App/AppCore/AppContainer.swift
+/Users/vessy/ios-git/App/Sources/App/AppCore/AppLogger.swift
+/Users/vessy/ios-git/App/Sources/App/AppCore/CredentialProvider.swift
+/Users/vessy/ios-git/App/Sources/App/GitPhoneApp.swift
+/Users/vessy/ios-git/App/Sources/App/AppCore/HostTrustPrompter.swift
+/Users/vessy/ios-git/App/Sources/App/Features/Keys/PublicKeysView.swift
+/Users/vessy/ios-git/App/Sources/App/Features/RepoFiles/RepoFilesView.swift
+/Users/vessy/ios-git/App/Sources/App/Features/RepoList/RepoListView.swift
+/Users/vessy/ios-git/App/Sources/App/AppCore/RepoListViewModel.swift
+/Users/vessy/ios-git/App/Sources/App/AppCore/RootView.swift
+/Users/vessy/ios-git/App/Sources/App/Features/Security/UnlockGateView.swift

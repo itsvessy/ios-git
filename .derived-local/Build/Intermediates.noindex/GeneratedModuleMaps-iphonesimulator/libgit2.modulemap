@@ -1,0 +1,4 @@
+module libgit2 {
+umbrella "/Users/vessy/ios-git/Vendor/libgit2/include"
+export *
+}

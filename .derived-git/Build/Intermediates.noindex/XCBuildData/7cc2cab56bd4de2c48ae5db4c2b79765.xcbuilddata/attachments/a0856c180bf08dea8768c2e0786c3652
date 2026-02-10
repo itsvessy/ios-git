@@ -1,0 +1,4 @@
+framework module GitEngine {
+  header "GitEngine-Swift.h"
+  requires objc
+}

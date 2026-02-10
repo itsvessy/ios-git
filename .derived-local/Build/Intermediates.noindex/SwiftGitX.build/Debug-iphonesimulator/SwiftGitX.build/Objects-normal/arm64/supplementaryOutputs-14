@@ -1,0 +1,44 @@
+{
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Models/FileMode.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/FileMode.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/FileMode.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/FileMode.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/FileMode.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/FileMode.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Models/Options/CheckoutOptions.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CheckoutOptions.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CheckoutOptions.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CheckoutOptions.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CheckoutOptions.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CheckoutOptions.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Models/Options/CloneOptions.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CloneOptions.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CloneOptions.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CloneOptions.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CloneOptions.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CloneOptions.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Models/Options/CommitOptions.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CommitOptions.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CommitOptions.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CommitOptions.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CommitOptions.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/CommitOptions.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Models/Options/DiffOption.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/DiffOption.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/DiffOption.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/DiffOption.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/DiffOption.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/DiffOption.swiftdeps"
+  },
+  "/Users/vessy/ios-git/Vendor/SwiftGitX/Sources/SwiftGitX/Models/Options/LogSortingOption.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/LogSortingOption.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/LogSortingOption.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/LogSortingOption.dia",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/LogSortingOption.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/SwiftGitX.build/Debug-iphonesimulator/SwiftGitX.build/Objects-normal/arm64/LogSortingOption.swiftdeps"
+  }
+}

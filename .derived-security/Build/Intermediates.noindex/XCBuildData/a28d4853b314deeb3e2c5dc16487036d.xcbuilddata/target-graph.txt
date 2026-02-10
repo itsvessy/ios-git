@@ -1,0 +1,4 @@
+Target dependency graph (2 targets)
+Target 'SecurityEngine' in project 'GitPhone'
+➜ Explicit dependency on target 'Core' in project 'GitPhone'
+Target 'Core' in project 'GitPhone' (no dependencies)

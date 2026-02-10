@@ -1,0 +1,39 @@
+{
+  "" : {
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SecurityEngine-primary.dia",
+    "emit-module-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SecurityEngine-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SecurityEngine-primary-emit-module.dia",
+    "pch" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SecurityEngine-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SecurityEngine-primary.swiftdeps"
+  },
+  "/Users/vessy/ios-git/SecurityEngine/Sources/FingerprintPinningPolicy.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/FingerprintPinningPolicy.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/FingerprintPinningPolicy.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/FingerprintPinningPolicy.dia",
+    "index-unit-output-path" : "/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/FingerprintPinningPolicy.o",
+    "llvm-bc" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/FingerprintPinningPolicy.bc",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/FingerprintPinningPolicy.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/FingerprintPinningPolicy.swiftdeps",
+    "swiftmodule" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/FingerprintPinningPolicy~partial.swiftmodule"
+  },
+  "/Users/vessy/ios-git/SecurityEngine/Sources/KeychainSecretStore.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/KeychainSecretStore.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/KeychainSecretStore.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/KeychainSecretStore.dia",
+    "index-unit-output-path" : "/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/KeychainSecretStore.o",
+    "llvm-bc" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/KeychainSecretStore.bc",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/KeychainSecretStore.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/KeychainSecretStore.swiftdeps",
+    "swiftmodule" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/KeychainSecretStore~partial.swiftmodule"
+  },
+  "/Users/vessy/ios-git/SecurityEngine/Sources/SSHKeyManager.swift" : {
+    "const-values" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SSHKeyManager.swiftconstvalues",
+    "dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SSHKeyManager.d",
+    "diagnostics" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SSHKeyManager.dia",
+    "index-unit-output-path" : "/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SSHKeyManager.o",
+    "llvm-bc" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SSHKeyManager.bc",
+    "object" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SSHKeyManager.o",
+    "swift-dependencies" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SSHKeyManager.swiftdeps",
+    "swiftmodule" : "/Users/vessy/ios-git/.derived-local/Build/Intermediates.noindex/GitPhone.build/Debug-iphonesimulator/SecurityEngine.build/Objects-normal/arm64/SSHKeyManager~partial.swiftmodule"
+  }
+}

@@ -41,9 +41,17 @@ private actor RecordingGitClient: GitClient {
     private(set) var calls: [Call] = []
     private var identity: RepoCommitIdentity?
     private let requireIdentityBeforeCommit: Bool
+    private let stageAllError: RepoError?
+    private let commitError: RepoError?
 
-    init(requireIdentityBeforeCommit: Bool = false) {
+    init(
+        requireIdentityBeforeCommit: Bool = false,
+        stageAllError: RepoError? = nil,
+        commitError: RepoError? = nil
+    ) {
         self.requireIdentityBeforeCommit = requireIdentityBeforeCommit
+        self.stageAllError = stageAllError
+        self.commitError = commitError
     }
 
     func prepareRemote(_ remoteURL: String) async throws -> RemoteProbeResult {
@@ -72,6 +80,9 @@ private actor RecordingGitClient: GitClient {
 
     func stageAll(_ repo: RepoRecord) async throws {
         calls.append(.stageAll)
+        if let stageAllError {
+            throw stageAllError
+        }
     }
 
     func loadCommitIdentity(_ repo: RepoRecord) async throws -> RepoCommitIdentity? {
@@ -85,6 +96,9 @@ private actor RecordingGitClient: GitClient {
 
     func commit(_ repo: RepoRecord, message: String) async throws -> RepoCommitResult {
         calls.append(.commit(message: message))
+        if let commitError {
+            throw commitError
+        }
         if requireIdentityBeforeCommit, identity == nil {
             throw RepoError.commitIdentityMissing
         }
@@ -227,6 +241,34 @@ final class RepoListGitActionsTests: XCTestCase {
                 .commit(message: "second attempt"),
             ]
         )
+    }
+
+    func testStageAllNoopShowsInfoBanner() async throws {
+        let gitClient = RecordingGitClient(stageAllError: .nothingToStage)
+        let viewModel = makeViewModel(gitClient: gitClient)
+        let repo = makeRepo()
+        try await store.upsert(repo)
+        await viewModel.refresh()
+
+        let success = await viewModel.stageAll(repo: repo)
+
+        XCTAssertFalse(success)
+        XCTAssertEqual(bannerCenter.banner?.text, RepoError.nothingToStage.localizedDescription)
+        XCTAssertEqual(bannerCenter.banner?.kind, .info)
+    }
+
+    func testCommitNoopShowsInfoBanner() async throws {
+        let gitClient = RecordingGitClient(commitError: .nothingToCommit)
+        let viewModel = makeViewModel(gitClient: gitClient)
+        let repo = makeRepo()
+        try await store.upsert(repo)
+        await viewModel.refresh()
+
+        let success = await viewModel.commit(repo: repo, message: "chore: noop")
+
+        XCTAssertFalse(success)
+        XCTAssertEqual(bannerCenter.banner?.text, RepoError.nothingToCommit.localizedDescription)
+        XCTAssertEqual(bannerCenter.banner?.kind, .info)
     }
 
     private func makeViewModel(gitClient: GitClient) -> RepoListViewModel {

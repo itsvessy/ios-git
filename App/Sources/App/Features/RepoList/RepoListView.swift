@@ -13,7 +13,7 @@ struct RepoListView: View {
     @State private var isPresentingAddRepo = false
     @State private var isPresentingSecurity = false
     @State private var selectedRepoForFilesID: RepoID?
-    @State private var selectedRepoForGitActions: RepoRecord?
+    @State private var selectedRepoForGitActions: RepoGitActionsDestination?
 
     var body: some View {
         repoList
@@ -71,8 +71,14 @@ struct RepoListView: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .sheet(item: $selectedRepoForGitActions) { repo in
-            RepoGitActionsSheet(repo: repo, viewModel: viewModel)
+        .sheet(item: $selectedRepoForGitActions) { destination in
+            RepoGitActionsSheet(
+                repo: destination.repo,
+                viewModel: viewModel,
+                presentationMode: destination.presentationMode
+            )
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
         .navigationDestination(isPresented: $isPresentingSecurity) {
             SecurityCenterView(viewModel: securityViewModel)
@@ -174,7 +180,12 @@ struct RepoListView: View {
                         viewModel: viewModel,
                         onDelete: { pendingDeleteRepo = $0 },
                         onOpenFiles: { selectedRepoForFilesID = $0 },
-                        onOpenGitActions: { selectedRepoForGitActions = $0 },
+                        onOpenGitActions: { openedRepo, mode in
+                            selectedRepoForGitActions = RepoGitActionsDestination(
+                                repo: openedRepo,
+                                presentationMode: mode
+                            )
+                        },
                         onDiscard: { pendingDiscardRepo = $0 }
                     )
                     .listRowInsets(EdgeInsets(top: 6, leading: rowHorizontalInset, bottom: 6, trailing: rowHorizontalInset))
@@ -216,7 +227,7 @@ private struct RepoRowView: View {
     @ObservedObject var viewModel: RepoListViewModel
     let onDelete: (RepoRecord) -> Void
     let onOpenFiles: (RepoID) -> Void
-    let onOpenGitActions: (RepoRecord) -> Void
+    let onOpenGitActions: (RepoRecord, RepoGitActionsPresentationMode) -> Void
     let onDiscard: (RepoRecord) -> Void
 
     var body: some View {
@@ -241,6 +252,7 @@ private struct RepoRowView: View {
                     }
 
                     HStack(spacing: AppSpacingTokens.xSmall) {
+                        quickGitActionButton
                         syncButton
                         moreMenu
                     }
@@ -324,17 +336,31 @@ private struct RepoRowView: View {
                     .font(.system(size: 14, weight: .semibold))
             }
         }
-        .buttonStyle(.borderedProminent)
+        .buttonStyle(.bordered)
         .controlSize(.small)
         .tint(AppColorTokens.accent)
         .disabled(viewModel.isSyncing(repoID: repo.id) || viewModel.isGitActionInProgress(repoID: repo.id))
         .accessibilityLabel(viewModel.isSyncing(repoID: repo.id) ? "Syncing repository" : "Sync repository")
     }
 
+    private var quickGitActionButton: some View {
+        Button {
+            onOpenGitActions(repo, .quick)
+        } label: {
+            Image(systemName: "arrow.up.circle.fill")
+                .font(.system(size: 14, weight: .semibold))
+        }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.small)
+        .tint(AppColorTokens.accent)
+        .disabled(viewModel.isSyncing(repoID: repo.id) || viewModel.isGitActionInProgress(repoID: repo.id))
+        .accessibilityLabel("Quick Commit and Push")
+    }
+
     private var moreMenu: some View {
         Menu {
             Button("Git Actions") {
-                onOpenGitActions(repo)
+                onOpenGitActions(repo, .advanced)
             }
 
             Button("Discard Local Changes", role: .destructive) {
@@ -362,6 +388,15 @@ private struct RepoRowView: View {
         .tint(AppColorTokens.accent)
         .accessibilityLabel("More actions")
         .disabled(viewModel.isGitActionInProgress(repoID: repo.id))
+    }
+}
+
+private struct RepoGitActionsDestination: Identifiable {
+    let repo: RepoRecord
+    let presentationMode: RepoGitActionsPresentationMode
+
+    var id: String {
+        "\(repo.id.rawValue.uuidString)-\(presentationMode.rawValue)"
     }
 }
 

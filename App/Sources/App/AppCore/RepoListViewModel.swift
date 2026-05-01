@@ -253,7 +253,7 @@ final class RepoListViewModel: ObservableObject {
             publish("Staged selected changes.", kind: .success)
             return true
         } catch {
-            publish(error.localizedDescription, kind: .error)
+            publishGitActionError(error)
             return false
         }
     }
@@ -267,7 +267,7 @@ final class RepoListViewModel: ObservableObject {
             publish("Staged all local changes.", kind: .success)
             return true
         } catch {
-            publish(error.localizedDescription, kind: .error)
+            publishGitActionError(error)
             return false
         }
     }
@@ -314,7 +314,7 @@ final class RepoListViewModel: ObservableObject {
             await logger.log("Commit complete for \(repo.displayName): \(result.commitID)")
             return true
         } catch {
-            publish(error.localizedDescription, kind: .error)
+            publishGitActionError(error)
             await logger.log("Commit failed for \(repo.displayName): \(error)", level: .warning)
             return false
         }
@@ -331,7 +331,7 @@ final class RepoListViewModel: ObservableObject {
             await logger.log("Push complete for \(repo.displayName) -> \(result.remoteName)/\(result.branchName)")
             return true
         } catch {
-            publish(error.localizedDescription, kind: .error)
+            publishGitActionError(error)
             await logger.log("Push failed for \(repo.displayName): \(error)", level: .warning)
             return false
         }
@@ -361,7 +361,7 @@ final class RepoListViewModel: ObservableObject {
             await logger.log("Quick add+commit+push complete for \(repo.displayName): \(commitResult.commitID)")
             return true
         } catch {
-            publish(error.localizedDescription, kind: .error)
+            publishGitActionError(error)
             await logger.log("Quick add+commit+push failed for \(repo.displayName): \(error)", level: .warning)
             return false
         }
@@ -445,6 +445,23 @@ final class RepoListViewModel: ObservableObject {
 
     private func publish(_ message: String, kind: RepoBannerMessage.Kind) {
         bannerCenter.show(RepoBannerMessage(text: message, kind: kind))
+    }
+
+    private func bannerKind(forGitError error: Error) -> RepoBannerMessage.Kind {
+        guard let repoError = error as? RepoError else {
+            return .error
+        }
+
+        switch repoError {
+        case .nothingToCommit, .nothingToStage:
+            return .info
+        default:
+            return .error
+        }
+    }
+
+    private func publishGitActionError(_ error: Error) {
+        publish(error.localizedDescription, kind: bannerKind(forGitError: error))
     }
 
     private func syncRank(for state: RepoSyncState) -> Int {

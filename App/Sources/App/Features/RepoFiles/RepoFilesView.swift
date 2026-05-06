@@ -4,12 +4,14 @@ import SwiftUI
 
 struct RepoFilesView: View {
     let repo: RepoRecord
+    @ObservedObject var viewModel: RepoListViewModel
 
     @State private var entries: [WorkingTreeEntry] = []
     @State private var errorMessage: String?
     @State private var showHiddenItems = false
     @State private var includeDirectories = false
     @State private var searchQuery = ""
+    @State private var selectedGitActionsMode: RepoGitActionsPresentationMode?
     @State private var loadTask: Task<Void, Never>?
 
     var body: some View {
@@ -20,7 +22,6 @@ struct RepoFilesView: View {
                     .foregroundStyle(.secondary)
                     .textSelection(.enabled)
             }
-
             if let errorMessage {
                 Section("Error") {
                     Text(errorMessage)
@@ -91,6 +92,14 @@ struct RepoFilesView: View {
                     Label("Refresh Files", systemImage: "arrow.clockwise")
                 }
             }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    selectedGitActionsMode = .advanced
+                } label: {
+                    Label("Git Actions", systemImage: "arrow.up.circle")
+                }
+                .disabled(isBusy)
+            }
         }
         .task {
             scheduleLoadEntries()
@@ -103,6 +112,15 @@ struct RepoFilesView: View {
         }
         .onDisappear {
             loadTask?.cancel()
+        }
+        .sheet(item: $selectedGitActionsMode) { mode in
+            RepoGitActionsSheet(
+                repo: repo,
+                viewModel: viewModel,
+                presentationMode: mode
+            )
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
     }
 
@@ -154,6 +172,10 @@ struct RepoFilesView: View {
         case .cancelled:
             break
         }
+    }
+
+    private var isBusy: Bool {
+        viewModel.isGitActionInProgress(repoID: repo.id) || viewModel.isSyncing(repoID: repo.id)
     }
 }
 

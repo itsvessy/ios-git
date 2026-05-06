@@ -62,7 +62,7 @@ enum RepoStateFilter: String, CaseIterable, Identifiable {
 }
 
 struct RepoBannerMessage: Identifiable, Equatable {
-    enum Kind {
+    enum Kind: Equatable {
         case info
         case success
         case warning

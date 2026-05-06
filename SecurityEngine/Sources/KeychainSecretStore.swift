@@ -86,7 +86,7 @@ public struct KeychainSecretStore: Sendable {
     }
 
     private var serviceName: String {
-        "com.vessy.GitPhone.secrets"
+        "com.vessy.CommitSync.secrets"
     }
 }
 
@@ -132,7 +132,7 @@ public final class AppLockCoordinator: ObservableObject {
         relockIntervalSeconds
     }
 
-    public func unlock(prompt: String = "Unlock GitPhone") async -> Bool {
+    public func unlock(prompt: String = "Unlock CommitSync") async -> Bool {
         let context = LAContext()
         var error: NSError?
 

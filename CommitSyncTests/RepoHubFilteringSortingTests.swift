@@ -4,7 +4,7 @@ import SecurityEngine
 import Storage
 import SwiftData
 import XCTest
-@testable import GitPhone
+@testable import CommitSync
 
 private struct NoopGitClient: GitClient {
     func prepareRemote(_ remoteURL: String) async throws -> RemoteProbeResult {
@@ -23,6 +23,34 @@ private struct NoopGitClient: GitClient {
     func probeRemote(_ remoteURL: String) async throws -> RemoteProbeResult {
         try await Task.sleep(nanoseconds: 1)
         return RemoteProbeResult(host: "github.com", port: 22, normalizedURL: remoteURL)
+    }
+
+    func listLocalChanges(_ repo: RepoRecord) async throws -> [RepoLocalChange] {
+        []
+    }
+
+    func stage(_ repo: RepoRecord, paths: [String]) async throws {}
+
+    func stageAll(_ repo: RepoRecord) async throws {}
+
+    func loadCommitIdentity(_ repo: RepoRecord) async throws -> RepoCommitIdentity? {
+        nil
+    }
+
+    func saveCommitIdentity(_ identity: RepoCommitIdentity, for repo: RepoRecord) async throws {}
+
+    func commit(_ repo: RepoRecord, message: String) async throws -> RepoCommitResult {
+        RepoCommitResult(commitID: "deadbeef", message: message)
+    }
+
+    func push(_ repo: RepoRecord) async throws -> RepoPushResult {
+        RepoPushResult(remoteName: "origin", branchName: repo.trackedBranch)
+    }
+
+    func discardLocalChanges(_ repo: RepoRecord) async throws {}
+
+    func resetToRemote(_ repo: RepoRecord) async throws -> SyncResult {
+        SyncResult(state: .success, message: "ok")
     }
 }
 

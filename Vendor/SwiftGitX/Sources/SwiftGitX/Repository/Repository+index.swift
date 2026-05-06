@@ -44,23 +44,23 @@ extension Repository {
 
     // TODO: Investigate these methods
 
-    internal func remove(path: String) throws(SwiftGitXError) {
+    public func remove(path: String) throws(SwiftGitXError) {
         try index.remove(path: path)
     }
 
-    internal func remove(file: URL) throws(SwiftGitXError) {
+    public func remove(file: URL) throws(SwiftGitXError) {
         try index.remove(file: file)
     }
 
-    internal func remove(paths: [String]) throws(SwiftGitXError) {
+    public func remove(paths: [String]) throws(SwiftGitXError) {
         try index.remove(paths: paths)
     }
 
-    internal func remove(files: [URL]) throws(SwiftGitXError) {
+    public func remove(files: [URL]) throws(SwiftGitXError) {
         try index.remove(files: files)
     }
 
-    internal func removeAll() throws(SwiftGitXError) {
+    public func removeAll() throws(SwiftGitXError) {
         try index.removeAll()
     }
 }

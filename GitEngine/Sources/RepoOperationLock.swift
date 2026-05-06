@@ -6,13 +6,20 @@ public actor RepoOperationLock {
 
     public init() {}
 
-    public func withLock<T: Sendable>(repoID: RepoID, operation: () async throws -> T) async throws -> T {
+    public func lock(repoID: RepoID) async {
         while activeLocks.contains(repoID) {
-            try await Task.sleep(for: .milliseconds(150))
+            try? await Task.sleep(for: .milliseconds(150))
         }
-
         activeLocks.insert(repoID)
-        defer { activeLocks.remove(repoID) }
+    }
+
+    public func unlock(repoID: RepoID) {
+        activeLocks.remove(repoID)
+    }
+
+    public func withLock<T: Sendable>(repoID: RepoID, operation: () async throws -> T) async throws -> T {
+        await lock(repoID: repoID)
+        defer { unlock(repoID: repoID) }
         return try await operation()
     }
 }

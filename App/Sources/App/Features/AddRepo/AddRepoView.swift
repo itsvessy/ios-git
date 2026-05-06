@@ -233,7 +233,7 @@ struct AddRepoView: View {
                     .textSelection(.enabled)
                     .lineLimit(2)
             } else {
-                Text("Default: GitPhone Documents/Repositories")
+                Text("Default: CommitSync Documents/Repositories")
                     .font(AppTypography.caption)
                     .foregroundStyle(.secondary)
             }

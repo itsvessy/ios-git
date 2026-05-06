@@ -48,6 +48,40 @@ final class AppContainer: ObservableObject {
             appLock.markUnlocked()
         }
 
+        if ProcessInfo.processInfo.arguments.contains("UITEST_SEED_REPO") {
+            let group = DispatchGroup()
+            group.enter()
+            Task.detached(priority: .userInitiated) { [repoStore, logger] in
+                defer { group.leave() }
+                do {
+                    let existing = try await repoStore.listRepos()
+                    guard existing.isEmpty else {
+                        return
+                    }
+
+                    let tempRoot = FileManager.default.temporaryDirectory
+                        .appendingPathComponent("CommitSyncUITestSeed", isDirectory: true)
+                    try FileManager.default.createDirectory(at: tempRoot, withIntermediateDirectories: true)
+
+                    let seededRepo = RepoRecord(
+                        id: RepoID(),
+                        displayName: "ui-test",
+                        remoteURL: "ssh://git@github.com:22/example/ui-test.git",
+                        localPath: tempRoot.path,
+                        trackedBranch: "main",
+                        autoSyncEnabled: true,
+                        lastSyncAt: nil,
+                        lastSyncState: .idle,
+                        lastErrorMessage: nil
+                    )
+                    try await repoStore.upsert(seededRepo)
+                } catch {
+                    await logger.log("UITest repo seed failed: \(error)", level: .warning)
+                }
+            }
+            group.wait()
+        }
+
         let trustEvaluator = FingerprintPinningPolicy(
             lookup: { [repoStore] host, port, algorithm in
                 try await repoStore.fingerprint(host: host, port: port, algorithm: algorithm)

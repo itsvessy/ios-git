@@ -60,7 +60,7 @@ struct RootView: View {
                     Label(section.title, systemImage: section.symbolName)
                         .tag(section)
                 }
-                .navigationTitle("GitPhone")
+                .navigationTitle("CommitSync")
                 .listStyle(.sidebar)
             } detail: {
                 NavigationStack {

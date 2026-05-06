@@ -20,7 +20,11 @@ extension Repository {
     /// If the remote is not specified, the upstream of the current branch is used
     /// and if the upstream branch is not found, the `origin` remote is used.
     // TODO: Implement options of these methods
-    public nonisolated func push(remote: Remote? = nil, createsRefspec: Bool = true) async throws(SwiftGitXError) {
+    public nonisolated func push(
+        remote: Remote? = nil,
+        createsRefspec: Bool = true,
+        authentication: SSHAuthentication? = nil
+    ) async throws(SwiftGitXError) {
         // Get the current branch or throw an error if HEAD is detached
         let currentBranch = try branch.current
 
@@ -46,9 +50,18 @@ extension Repository {
         let remotePointer = try ReferenceFactory.lookupRemotePointer(name: remote.name, repositoryPointer: pointer)
         defer { git_remote_free(remotePointer) }
 
+        var pushOptions = git_push_options()
+        git_push_init_options(&pushOptions, UInt32(GIT_PUSH_OPTIONS_VERSION))
+        let callbacks = makeRemoteCallbacks(
+            authentication: authentication,
+            transferProgressHandler: nil
+        )
+        pushOptions.callbacks = callbacks.callbacks
+        defer { releaseRemoteCallbacksPayload(callbacks.payload) }
+
         // Perform the push operation using configured refspecs
         try git(operation: .push) {
-            git_remote_push(remotePointer, nil, nil)
+            git_remote_push(remotePointer, nil, &pushOptions)
         }
     }
 

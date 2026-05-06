@@ -1,4 +1,4 @@
-# Contributing to GitPhone
+# Contributing to CommitSync
 
 Thanks for your interest in contributing.
 
@@ -20,7 +20,7 @@ xcodegen generate
 3. Build the app:
 
 ```bash
-xcodebuild -project GitPhone.xcodeproj -scheme GitPhone -destination 'generic/platform=iOS Simulator' -derivedDataPath .derived-local CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project CommitSync.xcodeproj -scheme CommitSync -destination 'generic/platform=iOS Simulator' -derivedDataPath .derived-local CODE_SIGNING_ALLOWED=NO build
 ```
 
 ## Running Tests
@@ -28,7 +28,7 @@ xcodebuild -project GitPhone.xcodeproj -scheme GitPhone -destination 'generic/pl
 Run unit tests:
 
 ```bash
-xcodebuild -project GitPhone.xcodeproj -scheme GitPhone -destination 'platform=iOS Simulator,name=iPhone 16' -derivedDataPath .derived-local -only-testing:GitPhoneTests CODE_SIGNING_ALLOWED=NO test
+xcodebuild -project CommitSync.xcodeproj -scheme CommitSync -destination 'platform=iOS Simulator,name=iPhone 16' -derivedDataPath .derived-local -only-testing:CommitSyncTests CODE_SIGNING_ALLOWED=NO test
 ```
 
 If your simulator names differ locally, pick any available iPhone simulator.

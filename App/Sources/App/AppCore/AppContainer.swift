@@ -60,7 +60,7 @@ final class AppContainer: ObservableObject {
                     }
 
                     let tempRoot = FileManager.default.temporaryDirectory
-                        .appendingPathComponent("GitPhoneUITestSeed", isDirectory: true)
+                        .appendingPathComponent("CommitSyncUITestSeed", isDirectory: true)
                     try FileManager.default.createDirectory(at: tempRoot, withIntermediateDirectories: true)
 
                     let seededRepo = RepoRecord(

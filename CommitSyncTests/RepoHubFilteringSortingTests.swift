@@ -4,7 +4,7 @@ import SecurityEngine
 import Storage
 import SwiftData
 import XCTest
-@testable import GitPhone
+@testable import CommitSync
 
 private struct NoopGitClient: GitClient {
     func prepareRemote(_ remoteURL: String) async throws -> RemoteProbeResult {

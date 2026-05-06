@@ -16,7 +16,7 @@ actor AppLogger {
         let dir = base.appendingPathComponent("Logs", isDirectory: true)
 
         try? fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
-        self.logURL = dir.appendingPathComponent("gitphone.log")
+        self.logURL = dir.appendingPathComponent("commitsync.log")
         self.formatter = ISO8601DateFormatter()
     }
 

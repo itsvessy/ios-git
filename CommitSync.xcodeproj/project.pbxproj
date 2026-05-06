@@ -1,0 +1,1694 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		047BA3A4017ECF8D810A2D3B /* Storage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A51BC943B8C63E1AE991BFD /* Storage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		068E1CD7B4C105875A82C0FD /* SSHKeyManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE6F93D9BE3BE767B8AE1EBC /* SSHKeyManaging.swift */; };
+		0702BCC02554D3EAFD00D505 /* SSHRemoteURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D3EEF56F648F5624E955AE /* SSHRemoteURLTests.swift */; };
+		0FBD878B71589C6919AB5D49 /* SSHKeysManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0394E0737CC7389A6591B7E3 /* SSHKeysManagementView.swift */; };
+		1526BD489BD4BE8FE66FA63E /* HostTrustPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E43C8F385BFF62312F29ED /* HostTrustPromptView.swift */; };
+		19B60D5891DF1E2A277488A7 /* Storage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0A51BC943B8C63E1AE991BFD /* Storage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1C521E9BADC2C7AB61EB9ABF /* AppColorTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64933AE7DC1F2A75F5913A0F /* AppColorTokens.swift */; };
+		1FEBFF4772DC59DDA6F8CB6A /* SecurityEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 655E523A3595C48949542D3E /* SecurityEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		232AC46CC5266FE485277FC1 /* StatusChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F63B14CAD2CE7857533673 /* StatusChip.swift */; };
+		24794434158651525A769C14 /* AppTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D412FFB65BCE8CC8A334528 /* AppTypography.swift */; };
+		25D25937EDC3C628CE3BA3CE /* GitEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7DBA0B454E740C7EAAFA49F /* GitEngine.framework */; };
+		292C7A31AF16516CA56BC201 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D9A3983A9F1432E2C12E5179 /* PrivacyInfo.xcprivacy */; };
+		2A1084EC6F86374F70C9630A /* SecurityEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655E523A3595C48949542D3E /* SecurityEngine.framework */; };
+		2E1DD607D8C8D73BA7F75E89 /* RepoHubState.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABFA9CBE0EB65F872D8FDC21 /* RepoHubState.swift */; };
+		2F9AF48D6CFF7C3B0AF0D37C /* RepoListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FB9EAF79545ADF31FC27F9 /* RepoListViewModel.swift */; };
+		2FDE7E1E53D0643762609E80 /* GitEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B7DBA0B454E740C7EAAFA49F /* GitEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3BDD23B28FE5945237D7C32B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2AF5C9148A7EDD5E210E93BB /* PrivacyInfo.xcprivacy */; };
+		3CFAB2E159974ECA07FAA60E /* RepoDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A811BAA86FDF80C026CE8B19 /* RepoDomain.swift */; };
+		3D288158100CA7D988A6B491 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11BBAF273CC910670F250D51 /* RootView.swift */; };
+		4250547C043577231FAACE84 /* AppSpacingTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = F035852E0324595E8F561E2E /* AppSpacingTokens.swift */; };
+		46680261B41EDF2141ACBB70 /* PublicKeysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73D63ED495440F9693ED41F8 /* PublicKeysView.swift */; };
+		4A5C73EC604D02E0A90367BD /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E780C92EBC9AECFE7123D /* Core.framework */; };
+		4C453CC7188A6F2D22E59FDC /* Storage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A51BC943B8C63E1AE991BFD /* Storage.framework */; };
+		4DBCC1AE55AD63290AD5B208 /* FingerprintPinningPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9464DD8068DC17B13222267C /* FingerprintPinningPolicy.swift */; };
+		4FA28484CEC1345B8B980107 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153192271E38B09D00F2E152 /* AppTheme.swift */; };
+		50BC27B843600DB19A1B3B87 /* SSHRemoteURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94DBE65A014B06C077CC876 /* SSHRemoteURL.swift */; };
+		52C5468A4BB9F517AE270BBF /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E780C92EBC9AECFE7123D /* Core.framework */; };
+		57990D7BE3F3D76F61C06B1C /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 566E780C92EBC9AECFE7123D /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5BFF2B4029483003DDB0D12B /* PersistenceStoreBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD03079E2D3FEB5B42FA7E8 /* PersistenceStoreBootstrap.swift */; };
+		5EF11F3C3BBD21768A9DEBDB /* Storage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A51BC943B8C63E1AE991BFD /* Storage.framework */; };
+		612C1E4A2D92D2C228BF2DFB /* GitEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B7DBA0B454E740C7EAAFA49F /* GitEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		618BAB8FAD7496AA34E6B212 /* CredentialProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341189820C61DCD820E9174B /* CredentialProvider.swift */; };
+		64860B919C2E003B028E9711 /* AppLockCoordinatorConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D931826A6184D69663FDBC1C /* AppLockCoordinatorConfigTests.swift */; };
+		68DF9E0F9D82A46C761C478B /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E780C92EBC9AECFE7123D /* Core.framework */; };
+		6BB14286B32112A290CE6DDA /* AddRepoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084BA23D5B07FFB40511A8CD /* AddRepoView.swift */; };
+		6E23816DAF7CFCE245626852 /* RepoHubFilteringSortingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75C578BC82F992E4A3B241BA /* RepoHubFilteringSortingTests.swift */; };
+		7142B512246650A5A46B7D48 /* BackgroundSync.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A16FE78CE922B8281B2A4E /* BackgroundSync.framework */; };
+		72975F27760DEB2F9CEF5F8A /* SecurityCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D9AD27921703C6727ABCCC /* SecurityCenterView.swift */; };
+		731879BA880E47137B228DAC /* KeychainSecretStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53EEFEBDE3564906761B7F2A /* KeychainSecretStore.swift */; };
+		74C2D72CC4DC0E6DE77711AE /* BackgroundSync.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 84A16FE78CE922B8281B2A4E /* BackgroundSync.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		78C7C72EAABDD7DE25891A79 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E780C92EBC9AECFE7123D /* Core.framework */; };
+		7B374E78969344727950FA81 /* RepoGitActionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37099B9650B0AFC6CBBA582E /* RepoGitActionsSheet.swift */; };
+		7CACEB5086620D100F364507 /* RepoOperationLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD5FDFC3CDE072A8F3A5480F /* RepoOperationLock.swift */; };
+		7F5B1C33CD89625FFF3C1440 /* HostTrustPrompter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81CD1E0AEEEAB8E724C9C969 /* HostTrustPrompter.swift */; };
+		7FC219CFDB5BB4814FCB4314 /* PersistenceStoreBootstrapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A44D5FAB53703CA145E59C11 /* PersistenceStoreBootstrapTests.swift */; };
+		7FC8974DF39DB7255E5D175F /* FileSystemGitClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05A73B1C36A6576CE724EE3 /* FileSystemGitClientTests.swift */; };
+		823231A8A61D25B1248BF1B6 /* RepoListSSHPreparationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD422B2E6063A11022B90A /* RepoListSSHPreparationTests.swift */; };
+		8651B076D3A1D23828D14A63 /* RepoStoreSecurityManagementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49ADBD02CDCCE5795C7542 /* RepoStoreSecurityManagementTests.swift */; };
+		8822D84B3B2F6C8776A98ABD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 731E6DD38267456B6897A381 /* Assets.xcassets */; };
+		8DBF7A27175B2C13FD493C42 /* BackgroundSyncCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91B22DFF874A3C969CFCCC7 /* BackgroundSyncCoordinator.swift */; };
+		90B8A640F068F3EF58A491AB /* AppContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB75A2531516663847356855 /* AppContainer.swift */; };
+		94294DBE0713D9D922B16235 /* AppLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEEFE14A5C1CC8337D349E6 /* AppLogger.swift */; };
+		992E7B26383232401B390C89 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E780C92EBC9AECFE7123D /* Core.framework */; };
+		998C1E28FE3C4F6E3B9D5A5F /* RepoStoreQueueIsolationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6475A7D4F859B7456D68375C /* RepoStoreQueueIsolationTests.swift */; };
+		9D8EB7B43204D1CF24C3B1EC /* DiagnosticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41BA6D742D2B2850E8989ECB /* DiagnosticsView.swift */; };
+		A40E591CDBAE7729D0E46D41 /* UnlockGateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68D279DDF951F0C8375D2BD8 /* UnlockGateView.swift */; };
+		A7ECFA64D28B8954D56354F8 /* CommitSyncApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B7E86CA8AD8F5A22D60303F /* CommitSyncApp.swift */; };
+		A814806BC85F5F4446FF3554 /* Core.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 566E780C92EBC9AECFE7123D /* Core.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AEEFC8C43D68F895D5BA0264 /* AppBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A11B31853AC8C82721FB82 /* AppBannerView.swift */; };
+		B255E4E80DF2CAACD83B9480 /* RepoFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5BAAFA1B9018854E93A07A1 /* RepoFilesView.swift */; };
+		B4FDFB3CB152AA1DB9054956 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D218767859CB46A69F18D7A3 /* LaunchScreen.storyboard */; };
+		B7C9F05F012CEDE1F0F97C65 /* BackgroundSync.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A16FE78CE922B8281B2A4E /* BackgroundSync.framework */; };
+		BB8F699AFFCECF58401935EA /* AppCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 867F2A19A1D33C92D6683BCC /* AppCard.swift */; };
+		BCE66C90856FF8833D767D68 /* GitEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7DBA0B454E740C7EAAFA49F /* GitEngine.framework */; };
+		BDB0196B509E0B66ECC1A256 /* FileSystemGitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FBB90488EB5BE45884A416 /* FileSystemGitClient.swift */; };
+		C0B006C3F640A636EE91E4A2 /* CommitSyncUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D0582F147D4660E455A22F /* CommitSyncUITests.swift */; };
+		C269CD467A9D33C7E35EDE02 /* SSHKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD2C4BFBBCD05DE928D6E1C /* SSHKeyManager.swift */; };
+		C65868F6EE29B24B9FCAFBCC /* RepoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF73F4FB681C26ABB36B867 /* RepoListView.swift */; };
+		CDC3DDF73742BDC6CDD2F8DE /* SecurityEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 655E523A3595C48949542D3E /* SecurityEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D0E6A8CC3D2838BD1956A541 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E780C92EBC9AECFE7123D /* Core.framework */; };
+		DC57B15D8EE9305E47922428 /* GitEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7DBA0B454E740C7EAAFA49F /* GitEngine.framework */; };
+		DCA2D04689AD855118059661 /* BackgroundSync.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 84A16FE78CE922B8281B2A4E /* BackgroundSync.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DFE0949DEF9D93A7D219F1BF /* SecurityEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655E523A3595C48949542D3E /* SecurityEngine.framework */; };
+		E2D6F40CA7430169BCED28C0 /* TrustedHostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CD0A5F8BFFD184D248B4EA9 /* TrustedHostsView.swift */; };
+		E34C008363C5A03AD7F28951 /* RepoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87EEDC1915812150BB0C8A52 /* RepoStore.swift */; };
+		E3B8B118D2636EA29701BCD0 /* PersistentModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29C0111E5CC29BC096D9E81 /* PersistentModels.swift */; };
+		E90A79ACCE163A56C4C1B216 /* KeyboardWarmupCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A9118DBA7705C60C7E2E71 /* KeyboardWarmupCoordinator.swift */; };
+		F2C21C53A8A4CD2E189F5C9C /* SecurityCenterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C482880003209E8959005071 /* SecurityCenterViewModel.swift */; };
+		F3083457FC9440460D20850C /* AppEmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 921BE562EBEFCE486107A805 /* AppEmptyState.swift */; };
+		F7D3BDADB6F03E796713BDBA /* SwiftGitX in Frameworks */ = {isa = PBXBuildFile; productRef = D55991E5DDF6FB0694304F9D /* SwiftGitX */; };
+		F9413097BCD93A4C917FC457 /* RepoListGitActionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 281ADEFD2E655916A6049760 /* RepoListGitActionsTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0493595419C41C9010DD16E2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB14F1D9A749B2E86968D751;
+			remoteInfo = Storage;
+		};
+		06E5C517D22A688ABCC26331 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D34049DB3ECB9E595FE6717;
+			remoteInfo = Core;
+		};
+		1448C4FD53FDC84583036427 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D34049DB3ECB9E595FE6717;
+			remoteInfo = Core;
+		};
+		1F6FF6973F8FEE8C1DA975C9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D34049DB3ECB9E595FE6717;
+			remoteInfo = Core;
+		};
+		2F025EAB54D99F1E4F2B17C2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D34049DB3ECB9E595FE6717;
+			remoteInfo = Core;
+		};
+		427A587933AB1D359DFBA16B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0AEC1D6C8CF33C01505E5E82;
+			remoteInfo = GitEngine;
+		};
+		6A0950A0BE756FBEB4D9336A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A2B4463D07F4377C671273DB;
+			remoteInfo = BackgroundSync;
+		};
+		73791FA6545A1B3145760AF5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D34049DB3ECB9E595FE6717;
+			remoteInfo = Core;
+		};
+		7D18388D8A6665B6BBEC4F66 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7B20F716B308559F293408B8;
+			remoteInfo = SecurityEngine;
+		};
+		8DAE7FBD642A4A62BF02A358 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7B20F716B308559F293408B8;
+			remoteInfo = SecurityEngine;
+		};
+		9962896D8C58F300385CE451 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A2B4463D07F4377C671273DB;
+			remoteInfo = BackgroundSync;
+		};
+		B55317C82D8C78FA83779AAF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6FD20A755744F0874C02795;
+			remoteInfo = CommitSync;
+		};
+		B94FF102472BF16D18E91AAE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D34049DB3ECB9E595FE6717;
+			remoteInfo = Core;
+		};
+		CD2475F0CEACD56B83BEB627 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6FD20A755744F0874C02795;
+			remoteInfo = CommitSync;
+		};
+		CDCC889C3D93FB19661191B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0AEC1D6C8CF33C01505E5E82;
+			remoteInfo = GitEngine;
+		};
+		E357A30938C721195F694655 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB14F1D9A749B2E86968D751;
+			remoteInfo = Storage;
+		};
+		FA70939764390355BB4D1D40 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042D51EE46BAE0128813B7E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0AEC1D6C8CF33C01505E5E82;
+			remoteInfo = GitEngine;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0BD9AF999C7966CAA494E349 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				57990D7BE3F3D76F61C06B1C /* Core.framework in Embed Frameworks */,
+				047BA3A4017ECF8D810A2D3B /* Storage.framework in Embed Frameworks */,
+				1FEBFF4772DC59DDA6F8CB6A /* SecurityEngine.framework in Embed Frameworks */,
+				2FDE7E1E53D0643762609E80 /* GitEngine.framework in Embed Frameworks */,
+				DCA2D04689AD855118059661 /* BackgroundSync.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		31A0864BFE1140AD50E161E5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A814806BC85F5F4446FF3554 /* Core.framework in Embed Frameworks */,
+				19B60D5891DF1E2A277488A7 /* Storage.framework in Embed Frameworks */,
+				CDC3DDF73742BDC6CDD2F8DE /* SecurityEngine.framework in Embed Frameworks */,
+				612C1E4A2D92D2C228BF2DFB /* GitEngine.framework in Embed Frameworks */,
+				74C2D72CC4DC0E6DE77711AE /* BackgroundSync.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0394E0737CC7389A6591B7E3 /* SSHKeysManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHKeysManagementView.swift; sourceTree = "<group>"; };
+		084BA23D5B07FFB40511A8CD /* AddRepoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRepoView.swift; sourceTree = "<group>"; };
+		09A11B31853AC8C82721FB82 /* AppBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppBannerView.swift; sourceTree = "<group>"; };
+		0A51BC943B8C63E1AE991BFD /* Storage.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Storage.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AD2C4BFBBCD05DE928D6E1C /* SSHKeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHKeyManager.swift; sourceTree = "<group>"; };
+		0B7E86CA8AD8F5A22D60303F /* CommitSyncApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommitSyncApp.swift; sourceTree = "<group>"; };
+		11BBAF273CC910670F250D51 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		153192271E38B09D00F2E152 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		15A9118DBA7705C60C7E2E71 /* KeyboardWarmupCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardWarmupCoordinator.swift; sourceTree = "<group>"; };
+		1A49ADBD02CDCCE5795C7542 /* RepoStoreSecurityManagementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoStoreSecurityManagementTests.swift; sourceTree = "<group>"; };
+		1CD0A5F8BFFD184D248B4EA9 /* TrustedHostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustedHostsView.swift; sourceTree = "<group>"; };
+		1D412FFB65BCE8CC8A334528 /* AppTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTypography.swift; sourceTree = "<group>"; };
+		281ADEFD2E655916A6049760 /* RepoListGitActionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoListGitActionsTests.swift; sourceTree = "<group>"; };
+		2AF5C9148A7EDD5E210E93BB /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		341189820C61DCD820E9174B /* CredentialProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CredentialProvider.swift; sourceTree = "<group>"; };
+		37099B9650B0AFC6CBBA582E /* RepoGitActionsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoGitActionsSheet.swift; sourceTree = "<group>"; };
+		3C3299B754C14C102FFA4516 /* CommitSyncTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CommitSyncTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		41BA6D742D2B2850E8989ECB /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
+		43D3EEF56F648F5624E955AE /* SSHRemoteURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHRemoteURLTests.swift; sourceTree = "<group>"; };
+		4DCD422B2E6063A11022B90A /* RepoListSSHPreparationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoListSSHPreparationTests.swift; sourceTree = "<group>"; };
+		53EEFEBDE3564906761B7F2A /* KeychainSecretStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSecretStore.swift; sourceTree = "<group>"; };
+		566E780C92EBC9AECFE7123D /* Core.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Core.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6475A7D4F859B7456D68375C /* RepoStoreQueueIsolationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoStoreQueueIsolationTests.swift; sourceTree = "<group>"; };
+		64933AE7DC1F2A75F5913A0F /* AppColorTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppColorTokens.swift; sourceTree = "<group>"; };
+		655E523A3595C48949542D3E /* SecurityEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecurityEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		68D279DDF951F0C8375D2BD8 /* UnlockGateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnlockGateView.swift; sourceTree = "<group>"; };
+		6AD03079E2D3FEB5B42FA7E8 /* PersistenceStoreBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceStoreBootstrap.swift; sourceTree = "<group>"; };
+		6AEEFE14A5C1CC8337D349E6 /* AppLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLogger.swift; sourceTree = "<group>"; };
+		6CF2F52CA96C8C78233104DC /* CommitSyncUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CommitSyncUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		70F63B14CAD2CE7857533673 /* StatusChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusChip.swift; sourceTree = "<group>"; };
+		731E6DD38267456B6897A381 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		73D63ED495440F9693ED41F8 /* PublicKeysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeysView.swift; sourceTree = "<group>"; };
+		75C578BC82F992E4A3B241BA /* RepoHubFilteringSortingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoHubFilteringSortingTests.swift; sourceTree = "<group>"; };
+		81CD1E0AEEEAB8E724C9C969 /* HostTrustPrompter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostTrustPrompter.swift; sourceTree = "<group>"; };
+		84A16FE78CE922B8281B2A4E /* BackgroundSync.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BackgroundSync.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		867F2A19A1D33C92D6683BCC /* AppCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCard.swift; sourceTree = "<group>"; };
+		87EEDC1915812150BB0C8A52 /* RepoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoStore.swift; sourceTree = "<group>"; };
+		921BE562EBEFCE486107A805 /* AppEmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEmptyState.swift; sourceTree = "<group>"; };
+		9464DD8068DC17B13222267C /* FingerprintPinningPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FingerprintPinningPolicy.swift; sourceTree = "<group>"; };
+		A44D5FAB53703CA145E59C11 /* PersistenceStoreBootstrapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceStoreBootstrapTests.swift; sourceTree = "<group>"; };
+		A811BAA86FDF80C026CE8B19 /* RepoDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoDomain.swift; sourceTree = "<group>"; };
+		ABFA9CBE0EB65F872D8FDC21 /* RepoHubState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoHubState.swift; sourceTree = "<group>"; };
+		B10944F8A5B4869994A22A4F /* CommitSync.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CommitSync.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4FB9EAF79545ADF31FC27F9 /* RepoListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoListViewModel.swift; sourceTree = "<group>"; };
+		B7DBA0B454E740C7EAAFA49F /* GitEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GitEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9E43C8F385BFF62312F29ED /* HostTrustPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostTrustPromptView.swift; sourceTree = "<group>"; };
+		C482880003209E8959005071 /* SecurityCenterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityCenterViewModel.swift; sourceTree = "<group>"; };
+		C91B22DFF874A3C969CFCCC7 /* BackgroundSyncCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSyncCoordinator.swift; sourceTree = "<group>"; };
+		CFF73F4FB681C26ABB36B867 /* RepoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoListView.swift; sourceTree = "<group>"; };
+		D218767859CB46A69F18D7A3 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D29C0111E5CC29BC096D9E81 /* PersistentModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentModels.swift; sourceTree = "<group>"; };
+		D931826A6184D69663FDBC1C /* AppLockCoordinatorConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockCoordinatorConfigTests.swift; sourceTree = "<group>"; };
+		D9A3983A9F1432E2C12E5179 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		DD5FDFC3CDE072A8F3A5480F /* RepoOperationLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoOperationLock.swift; sourceTree = "<group>"; };
+		E5BAAFA1B9018854E93A07A1 /* RepoFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoFilesView.swift; sourceTree = "<group>"; };
+		E6FBB90488EB5BE45884A416 /* FileSystemGitClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystemGitClient.swift; sourceTree = "<group>"; };
+		E7D9AD27921703C6727ABCCC /* SecurityCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityCenterView.swift; sourceTree = "<group>"; };
+		E94DBE65A014B06C077CC876 /* SSHRemoteURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHRemoteURL.swift; sourceTree = "<group>"; };
+		EE6F93D9BE3BE767B8AE1EBC /* SSHKeyManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSHKeyManaging.swift; sourceTree = "<group>"; };
+		F035852E0324595E8F561E2E /* AppSpacingTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSpacingTokens.swift; sourceTree = "<group>"; };
+		F05A73B1C36A6576CE724EE3 /* FileSystemGitClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystemGitClientTests.swift; sourceTree = "<group>"; };
+		F2D0582F147D4660E455A22F /* CommitSyncUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommitSyncUITests.swift; sourceTree = "<group>"; };
+		F467983274EF72E384269CA9 /* SwiftGitX */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SwiftGitX; path = Vendor/SwiftGitX; sourceTree = SOURCE_ROOT; };
+		FB75A2531516663847356855 /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		023A6F1AD96A31E9A8D13A1B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				68DF9E0F9D82A46C761C478B /* Core.framework in Frameworks */,
+				5EF11F3C3BBD21768A9DEBDB /* Storage.framework in Frameworks */,
+				DFE0949DEF9D93A7D219F1BF /* SecurityEngine.framework in Frameworks */,
+				BCE66C90856FF8833D767D68 /* GitEngine.framework in Frameworks */,
+				B7C9F05F012CEDE1F0F97C65 /* BackgroundSync.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0C7D750D9F51A2862EC35549 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D0E6A8CC3D2838BD1956A541 /* Core.framework in Frameworks */,
+				25D25937EDC3C628CE3BA3CE /* GitEngine.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		951FA8E3F412F27EC23DAE6C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				52C5468A4BB9F517AE270BBF /* Core.framework in Frameworks */,
+				F7D3BDADB6F03E796713BDBA /* SwiftGitX in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B029C914D2415A251F1757D6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				992E7B26383232401B390C89 /* Core.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D0BD6B9CF4E1A99D09DB9DD9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A5C73EC604D02E0A90367BD /* Core.framework in Frameworks */,
+				4C453CC7188A6F2D22E59FDC /* Storage.framework in Frameworks */,
+				2A1084EC6F86374F70C9630A /* SecurityEngine.framework in Frameworks */,
+				DC57B15D8EE9305E47922428 /* GitEngine.framework in Frameworks */,
+				7142B512246650A5A46B7D48 /* BackgroundSync.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DACB9F831ACE838E4F6204C7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78C7C72EAABDD7DE25891A79 /* Core.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0AA00A69227DD3BB88986141 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				0EB6B1C9E8435AA4B6DA0104 /* AddRepo */,
+				61C4AFD5B2314E8C6480524C /* Keys */,
+				1EA64D8F8F09193089A7F309 /* RepoFiles */,
+				720757104751E0929193F4E7 /* RepoList */,
+				F6D931F4AF0DC29030F682E3 /* Security */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		0D9294177CD4FE57949B6B4E /* CommitSyncTests */ = {
+			isa = PBXGroup;
+			children = (
+				D931826A6184D69663FDBC1C /* AppLockCoordinatorConfigTests.swift */,
+				F05A73B1C36A6576CE724EE3 /* FileSystemGitClientTests.swift */,
+				A44D5FAB53703CA145E59C11 /* PersistenceStoreBootstrapTests.swift */,
+				75C578BC82F992E4A3B241BA /* RepoHubFilteringSortingTests.swift */,
+				281ADEFD2E655916A6049760 /* RepoListGitActionsTests.swift */,
+				4DCD422B2E6063A11022B90A /* RepoListSSHPreparationTests.swift */,
+				6475A7D4F859B7456D68375C /* RepoStoreQueueIsolationTests.swift */,
+				1A49ADBD02CDCCE5795C7542 /* RepoStoreSecurityManagementTests.swift */,
+				43D3EEF56F648F5624E955AE /* SSHRemoteURLTests.swift */,
+			);
+			path = CommitSyncTests;
+			sourceTree = "<group>";
+		};
+		0EB6B1C9E8435AA4B6DA0104 /* AddRepo */ = {
+			isa = PBXGroup;
+			children = (
+				084BA23D5B07FFB40511A8CD /* AddRepoView.swift */,
+			);
+			path = AddRepo;
+			sourceTree = "<group>";
+		};
+		0FDEAD6D49537E45A9CC7241 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				9464DD8068DC17B13222267C /* FingerprintPinningPolicy.swift */,
+				53EEFEBDE3564906761B7F2A /* KeychainSecretStore.swift */,
+				0AD2C4BFBBCD05DE928D6E1C /* SSHKeyManager.swift */,
+			);
+			name = Sources;
+			path = SecurityEngine/Sources;
+			sourceTree = "<group>";
+		};
+		10DC4A446BD79AD47FABF301 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				0B7E86CA8AD8F5A22D60303F /* CommitSyncApp.swift */,
+				4CF2A58701AA16F01D6945E5 /* AppCore */,
+				E341E9F0FE9D1BE504AE586D /* DesignSystem */,
+				0AA00A69227DD3BB88986141 /* Features */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		1EA64D8F8F09193089A7F309 /* RepoFiles */ = {
+			isa = PBXGroup;
+			children = (
+				E5BAAFA1B9018854E93A07A1 /* RepoFilesView.swift */,
+			);
+			path = RepoFiles;
+			sourceTree = "<group>";
+		};
+		1FB145FE5E1E5B6498BDB12B /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A811BAA86FDF80C026CE8B19 /* RepoDomain.swift */,
+				E94DBE65A014B06C077CC876 /* SSHRemoteURL.swift */,
+			);
+			name = Sources;
+			path = Core/Sources;
+			sourceTree = "<group>";
+		};
+		42B7DAF14B193BDCCBE7C829 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				10DC4A446BD79AD47FABF301 /* App */,
+			);
+			name = Sources;
+			path = App/Sources;
+			sourceTree = "<group>";
+		};
+		436BE3065C1C977EF3459F62 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				D29C0111E5CC29BC096D9E81 /* PersistentModels.swift */,
+				87EEDC1915812150BB0C8A52 /* RepoStore.swift */,
+			);
+			name = Sources;
+			path = Storage/Sources;
+			sourceTree = "<group>";
+		};
+		45252A55A9AFF8CA2F1EFDF8 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E6FBB90488EB5BE45884A416 /* FileSystemGitClient.swift */,
+				DD5FDFC3CDE072A8F3A5480F /* RepoOperationLock.swift */,
+			);
+			name = Sources;
+			path = GitEngine/Sources;
+			sourceTree = "<group>";
+		};
+		4CF2A58701AA16F01D6945E5 /* AppCore */ = {
+			isa = PBXGroup;
+			children = (
+				FB75A2531516663847356855 /* AppContainer.swift */,
+				6AEEFE14A5C1CC8337D349E6 /* AppLogger.swift */,
+				341189820C61DCD820E9174B /* CredentialProvider.swift */,
+				81CD1E0AEEEAB8E724C9C969 /* HostTrustPrompter.swift */,
+				15A9118DBA7705C60C7E2E71 /* KeyboardWarmupCoordinator.swift */,
+				6AD03079E2D3FEB5B42FA7E8 /* PersistenceStoreBootstrap.swift */,
+				ABFA9CBE0EB65F872D8FDC21 /* RepoHubState.swift */,
+				B4FB9EAF79545ADF31FC27F9 /* RepoListViewModel.swift */,
+				11BBAF273CC910670F250D51 /* RootView.swift */,
+				C482880003209E8959005071 /* SecurityCenterViewModel.swift */,
+				EE6F93D9BE3BE767B8AE1EBC /* SSHKeyManaging.swift */,
+			);
+			path = AppCore;
+			sourceTree = "<group>";
+		};
+		5167592654D969F756325CF8 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				09A11B31853AC8C82721FB82 /* AppBannerView.swift */,
+				867F2A19A1D33C92D6683BCC /* AppCard.swift */,
+				921BE562EBEFCE486107A805 /* AppEmptyState.swift */,
+				B9E43C8F385BFF62312F29ED /* HostTrustPromptView.swift */,
+				70F63B14CAD2CE7857533673 /* StatusChip.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		531C83B42A3A4B44F231ABC6 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				F467983274EF72E384269CA9 /* SwiftGitX */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		5D12E9956A882D98F59D8F56 /* CommitSyncUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F2D0582F147D4660E455A22F /* CommitSyncUITests.swift */,
+			);
+			path = CommitSyncUITests;
+			sourceTree = "<group>";
+		};
+		61C4AFD5B2314E8C6480524C /* Keys */ = {
+			isa = PBXGroup;
+			children = (
+				73D63ED495440F9693ED41F8 /* PublicKeysView.swift */,
+			);
+			path = Keys;
+			sourceTree = "<group>";
+		};
+		6716978DFCCE8251ECCB0120 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				731E6DD38267456B6897A381 /* Assets.xcassets */,
+				D218767859CB46A69F18D7A3 /* LaunchScreen.storyboard */,
+				D9A3983A9F1432E2C12E5179 /* PrivacyInfo.xcprivacy */,
+			);
+			name = Resources;
+			path = App/Resources;
+			sourceTree = "<group>";
+		};
+		6B7B8DFBE822BE61973412D5 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				C91B22DFF874A3C969CFCCC7 /* BackgroundSyncCoordinator.swift */,
+			);
+			name = Sources;
+			path = BackgroundSync/Sources;
+			sourceTree = "<group>";
+		};
+		720757104751E0929193F4E7 /* RepoList */ = {
+			isa = PBXGroup;
+			children = (
+				37099B9650B0AFC6CBBA582E /* RepoGitActionsSheet.swift */,
+				CFF73F4FB681C26ABB36B867 /* RepoListView.swift */,
+			);
+			path = RepoList;
+			sourceTree = "<group>";
+		};
+		748F0838313173E6DC719D67 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2AF5C9148A7EDD5E210E93BB /* PrivacyInfo.xcprivacy */,
+			);
+			name = Resources;
+			path = GitEngine/Resources;
+			sourceTree = "<group>";
+		};
+		8DF7AF337AEA5F06229DD216 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				84A16FE78CE922B8281B2A4E /* BackgroundSync.framework */,
+				B10944F8A5B4869994A22A4F /* CommitSync.app */,
+				3C3299B754C14C102FFA4516 /* CommitSyncTests.xctest */,
+				6CF2F52CA96C8C78233104DC /* CommitSyncUITests.xctest */,
+				566E780C92EBC9AECFE7123D /* Core.framework */,
+				B7DBA0B454E740C7EAAFA49F /* GitEngine.framework */,
+				655E523A3595C48949542D3E /* SecurityEngine.framework */,
+				0A51BC943B8C63E1AE991BFD /* Storage.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AFBBFD0FAA7071D8E7590171 = {
+			isa = PBXGroup;
+			children = (
+				0D9294177CD4FE57949B6B4E /* CommitSyncTests */,
+				5D12E9956A882D98F59D8F56 /* CommitSyncUITests */,
+				531C83B42A3A4B44F231ABC6 /* Packages */,
+				6716978DFCCE8251ECCB0120 /* Resources */,
+				748F0838313173E6DC719D67 /* Resources */,
+				42B7DAF14B193BDCCBE7C829 /* Sources */,
+				6B7B8DFBE822BE61973412D5 /* Sources */,
+				1FB145FE5E1E5B6498BDB12B /* Sources */,
+				45252A55A9AFF8CA2F1EFDF8 /* Sources */,
+				0FDEAD6D49537E45A9CC7241 /* Sources */,
+				436BE3065C1C977EF3459F62 /* Sources */,
+				8DF7AF337AEA5F06229DD216 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DD3C754682E821EE06C92761 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				64933AE7DC1F2A75F5913A0F /* AppColorTokens.swift */,
+				F035852E0324595E8F561E2E /* AppSpacingTokens.swift */,
+				153192271E38B09D00F2E152 /* AppTheme.swift */,
+				1D412FFB65BCE8CC8A334528 /* AppTypography.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		E341E9F0FE9D1BE504AE586D /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				5167592654D969F756325CF8 /* Components */,
+				DD3C754682E821EE06C92761 /* Theme */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		F6D931F4AF0DC29030F682E3 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				41BA6D742D2B2850E8989ECB /* DiagnosticsView.swift */,
+				E7D9AD27921703C6727ABCCC /* SecurityCenterView.swift */,
+				0394E0737CC7389A6591B7E3 /* SSHKeysManagementView.swift */,
+				1CD0A5F8BFFD184D248B4EA9 /* TrustedHostsView.swift */,
+				68D279DDF951F0C8375D2BD8 /* UnlockGateView.swift */,
+			);
+			path = Security;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0AEC1D6C8CF33C01505E5E82 /* GitEngine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DB9DFF187A399438C5B9016F /* Build configuration list for PBXNativeTarget "GitEngine" */;
+			buildPhases = (
+				7155D41B80D711A64D256E84 /* Sources */,
+				5106D0560FC1E9B031694211 /* Resources */,
+				951FA8E3F412F27EC23DAE6C /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				34DEF9D7F7F17212319CA1AD /* PBXTargetDependency */,
+			);
+			name = GitEngine;
+			packageProductDependencies = (
+				D55991E5DDF6FB0694304F9D /* SwiftGitX */,
+			);
+			productName = GitEngine;
+			productReference = B7DBA0B454E740C7EAAFA49F /* GitEngine.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		0D34049DB3ECB9E595FE6717 /* Core */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1903B6D1F959942C7C06AE5F /* Build configuration list for PBXNativeTarget "Core" */;
+			buildPhases = (
+				984D3D663FBF245751AFF473 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Core;
+			packageProductDependencies = (
+			);
+			productName = Core;
+			productReference = 566E780C92EBC9AECFE7123D /* Core.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		7225A9465E8271F92CD212FA /* CommitSyncTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4E3E854FFBDFCA411C24A654 /* Build configuration list for PBXNativeTarget "CommitSyncTests" */;
+			buildPhases = (
+				1F7A8A7537D9599B20574B45 /* Sources */,
+				023A6F1AD96A31E9A8D13A1B /* Frameworks */,
+				31A0864BFE1140AD50E161E5 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				59B0FBBE0EAF492D2BE6D3D1 /* PBXTargetDependency */,
+				9426C03E69A1B482389BABA4 /* PBXTargetDependency */,
+				E284ED134EC5075E5F3702C0 /* PBXTargetDependency */,
+				6E4138644C93A972F0D1668D /* PBXTargetDependency */,
+				B76C8E869706F9F95A80676E /* PBXTargetDependency */,
+				856E7384EB2BEC93B8331C34 /* PBXTargetDependency */,
+			);
+			name = CommitSyncTests;
+			packageProductDependencies = (
+			);
+			productName = CommitSyncTests;
+			productReference = 3C3299B754C14C102FFA4516 /* CommitSyncTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		7B20F716B308559F293408B8 /* SecurityEngine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 465D8C204B9B69D561349E1D /* Build configuration list for PBXNativeTarget "SecurityEngine" */;
+			buildPhases = (
+				D831CDF73E6655EBE81B7562 /* Sources */,
+				DACB9F831ACE838E4F6204C7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4775CC1BE8FB8606F27782E3 /* PBXTargetDependency */,
+			);
+			name = SecurityEngine;
+			packageProductDependencies = (
+			);
+			productName = SecurityEngine;
+			productReference = 655E523A3595C48949542D3E /* SecurityEngine.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		A2B4463D07F4377C671273DB /* BackgroundSync */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 82B0EB5203C2F33E7D69FC3C /* Build configuration list for PBXNativeTarget "BackgroundSync" */;
+			buildPhases = (
+				1814DF1D6693BDBC73E640AD /* Sources */,
+				0C7D750D9F51A2862EC35549 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7B0D52DF519941135045EC53 /* PBXTargetDependency */,
+				E5DBC5F618A6D88BD21930E5 /* PBXTargetDependency */,
+			);
+			name = BackgroundSync;
+			packageProductDependencies = (
+			);
+			productName = BackgroundSync;
+			productReference = 84A16FE78CE922B8281B2A4E /* BackgroundSync.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		A6FD20A755744F0874C02795 /* CommitSync */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77802A3E98D107BFC6CB4D58 /* Build configuration list for PBXNativeTarget "CommitSync" */;
+			buildPhases = (
+				D21A223FA3C0EBE756DF42D5 /* Sources */,
+				CCE5ECC36AEC41C019D18113 /* Resources */,
+				D0BD6B9CF4E1A99D09DB9DD9 /* Frameworks */,
+				0BD9AF999C7966CAA494E349 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9F9964BD76912432AAD96840 /* PBXTargetDependency */,
+				F4D2068A5C372A8D06772853 /* PBXTargetDependency */,
+				B9FFD2DC0D180CE788AFEF00 /* PBXTargetDependency */,
+				0BAC74A1F12CBC1FD040DCC1 /* PBXTargetDependency */,
+				6284A06D056493BFD25005C1 /* PBXTargetDependency */,
+			);
+			name = CommitSync;
+			packageProductDependencies = (
+			);
+			productName = CommitSync;
+			productReference = B10944F8A5B4869994A22A4F /* CommitSync.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D23DBD552C212B3187E2AE74 /* CommitSyncUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 010FFAC317C5CAE9DD540F2D /* Build configuration list for PBXNativeTarget "CommitSyncUITests" */;
+			buildPhases = (
+				01586899CC06598B254B68E7 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				52CDAB39A2607EA1BAF06826 /* PBXTargetDependency */,
+			);
+			name = CommitSyncUITests;
+			packageProductDependencies = (
+			);
+			productName = CommitSyncUITests;
+			productReference = 6CF2F52CA96C8C78233104DC /* CommitSyncUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		FB14F1D9A749B2E86968D751 /* Storage */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 571B6904804BE7208A30456E /* Build configuration list for PBXNativeTarget "Storage" */;
+			buildPhases = (
+				ADC4C623AEF581165DD11A35 /* Sources */,
+				B029C914D2415A251F1757D6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C84A725BF49C9E96B5C23206 /* PBXTargetDependency */,
+			);
+			name = Storage;
+			packageProductDependencies = (
+			);
+			productName = Storage;
+			productReference = 0A51BC943B8C63E1AE991BFD /* Storage.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		042D51EE46BAE0128813B7E9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					7225A9465E8271F92CD212FA = {
+						DevelopmentTeam = WDKDNA9572;
+						ProvisioningStyle = Automatic;
+					};
+					A6FD20A755744F0874C02795 = {
+						ProvisioningStyle = Automatic;
+					};
+					D23DBD552C212B3187E2AE74 = {
+						DevelopmentTeam = WDKDNA9572;
+						ProvisioningStyle = Automatic;
+						TestTargetID = A6FD20A755744F0874C02795;
+					};
+				};
+			};
+			buildConfigurationList = 96B6964E1975AEFFAF6A7F52 /* Build configuration list for PBXProject "CommitSync" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = AFBBFD0FAA7071D8E7590171;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				50807E77940E286C4B40CF60 /* XCLocalSwiftPackageReference "Vendor/SwiftGitX" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 8DF7AF337AEA5F06229DD216 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A2B4463D07F4377C671273DB /* BackgroundSync */,
+				A6FD20A755744F0874C02795 /* CommitSync */,
+				7225A9465E8271F92CD212FA /* CommitSyncTests */,
+				D23DBD552C212B3187E2AE74 /* CommitSyncUITests */,
+				0D34049DB3ECB9E595FE6717 /* Core */,
+				0AEC1D6C8CF33C01505E5E82 /* GitEngine */,
+				7B20F716B308559F293408B8 /* SecurityEngine */,
+				FB14F1D9A749B2E86968D751 /* Storage */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5106D0560FC1E9B031694211 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BDD23B28FE5945237D7C32B /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCE5ECC36AEC41C019D18113 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8822D84B3B2F6C8776A98ABD /* Assets.xcassets in Resources */,
+				B4FDFB3CB152AA1DB9054956 /* LaunchScreen.storyboard in Resources */,
+				292C7A31AF16516CA56BC201 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		01586899CC06598B254B68E7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0B006C3F640A636EE91E4A2 /* CommitSyncUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1814DF1D6693BDBC73E640AD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8DBF7A27175B2C13FD493C42 /* BackgroundSyncCoordinator.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1F7A8A7537D9599B20574B45 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64860B919C2E003B028E9711 /* AppLockCoordinatorConfigTests.swift in Sources */,
+				7FC8974DF39DB7255E5D175F /* FileSystemGitClientTests.swift in Sources */,
+				7FC219CFDB5BB4814FCB4314 /* PersistenceStoreBootstrapTests.swift in Sources */,
+				6E23816DAF7CFCE245626852 /* RepoHubFilteringSortingTests.swift in Sources */,
+				F9413097BCD93A4C917FC457 /* RepoListGitActionsTests.swift in Sources */,
+				823231A8A61D25B1248BF1B6 /* RepoListSSHPreparationTests.swift in Sources */,
+				998C1E28FE3C4F6E3B9D5A5F /* RepoStoreQueueIsolationTests.swift in Sources */,
+				8651B076D3A1D23828D14A63 /* RepoStoreSecurityManagementTests.swift in Sources */,
+				0702BCC02554D3EAFD00D505 /* SSHRemoteURLTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7155D41B80D711A64D256E84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDB0196B509E0B66ECC1A256 /* FileSystemGitClient.swift in Sources */,
+				7CACEB5086620D100F364507 /* RepoOperationLock.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		984D3D663FBF245751AFF473 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CFAB2E159974ECA07FAA60E /* RepoDomain.swift in Sources */,
+				50BC27B843600DB19A1B3B87 /* SSHRemoteURL.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ADC4C623AEF581165DD11A35 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E3B8B118D2636EA29701BCD0 /* PersistentModels.swift in Sources */,
+				E34C008363C5A03AD7F28951 /* RepoStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D21A223FA3C0EBE756DF42D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6BB14286B32112A290CE6DDA /* AddRepoView.swift in Sources */,
+				AEEFC8C43D68F895D5BA0264 /* AppBannerView.swift in Sources */,
+				BB8F699AFFCECF58401935EA /* AppCard.swift in Sources */,
+				1C521E9BADC2C7AB61EB9ABF /* AppColorTokens.swift in Sources */,
+				90B8A640F068F3EF58A491AB /* AppContainer.swift in Sources */,
+				F3083457FC9440460D20850C /* AppEmptyState.swift in Sources */,
+				94294DBE0713D9D922B16235 /* AppLogger.swift in Sources */,
+				4250547C043577231FAACE84 /* AppSpacingTokens.swift in Sources */,
+				4FA28484CEC1345B8B980107 /* AppTheme.swift in Sources */,
+				24794434158651525A769C14 /* AppTypography.swift in Sources */,
+				A7ECFA64D28B8954D56354F8 /* CommitSyncApp.swift in Sources */,
+				618BAB8FAD7496AA34E6B212 /* CredentialProvider.swift in Sources */,
+				9D8EB7B43204D1CF24C3B1EC /* DiagnosticsView.swift in Sources */,
+				1526BD489BD4BE8FE66FA63E /* HostTrustPromptView.swift in Sources */,
+				7F5B1C33CD89625FFF3C1440 /* HostTrustPrompter.swift in Sources */,
+				E90A79ACCE163A56C4C1B216 /* KeyboardWarmupCoordinator.swift in Sources */,
+				5BFF2B4029483003DDB0D12B /* PersistenceStoreBootstrap.swift in Sources */,
+				46680261B41EDF2141ACBB70 /* PublicKeysView.swift in Sources */,
+				B255E4E80DF2CAACD83B9480 /* RepoFilesView.swift in Sources */,
+				7B374E78969344727950FA81 /* RepoGitActionsSheet.swift in Sources */,
+				2E1DD607D8C8D73BA7F75E89 /* RepoHubState.swift in Sources */,
+				C65868F6EE29B24B9FCAFBCC /* RepoListView.swift in Sources */,
+				2F9AF48D6CFF7C3B0AF0D37C /* RepoListViewModel.swift in Sources */,
+				3D288158100CA7D988A6B491 /* RootView.swift in Sources */,
+				068E1CD7B4C105875A82C0FD /* SSHKeyManaging.swift in Sources */,
+				0FBD878B71589C6919AB5D49 /* SSHKeysManagementView.swift in Sources */,
+				72975F27760DEB2F9CEF5F8A /* SecurityCenterView.swift in Sources */,
+				F2C21C53A8A4CD2E189F5C9C /* SecurityCenterViewModel.swift in Sources */,
+				232AC46CC5266FE485277FC1 /* StatusChip.swift in Sources */,
+				E2D6F40CA7430169BCED28C0 /* TrustedHostsView.swift in Sources */,
+				A40E591CDBAE7729D0E46D41 /* UnlockGateView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D831CDF73E6655EBE81B7562 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4DBCC1AE55AD63290AD5B208 /* FingerprintPinningPolicy.swift in Sources */,
+				731879BA880E47137B228DAC /* KeychainSecretStore.swift in Sources */,
+				C269CD467A9D33C7E35EDE02 /* SSHKeyManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0BAC74A1F12CBC1FD040DCC1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0AEC1D6C8CF33C01505E5E82 /* GitEngine */;
+			targetProxy = 427A587933AB1D359DFBA16B /* PBXContainerItemProxy */;
+		};
+		34DEF9D7F7F17212319CA1AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D34049DB3ECB9E595FE6717 /* Core */;
+			targetProxy = 1F6FF6973F8FEE8C1DA975C9 /* PBXContainerItemProxy */;
+		};
+		4775CC1BE8FB8606F27782E3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D34049DB3ECB9E595FE6717 /* Core */;
+			targetProxy = 2F025EAB54D99F1E4F2B17C2 /* PBXContainerItemProxy */;
+		};
+		52CDAB39A2607EA1BAF06826 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6FD20A755744F0874C02795 /* CommitSync */;
+			targetProxy = B55317C82D8C78FA83779AAF /* PBXContainerItemProxy */;
+		};
+		59B0FBBE0EAF492D2BE6D3D1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6FD20A755744F0874C02795 /* CommitSync */;
+			targetProxy = CD2475F0CEACD56B83BEB627 /* PBXContainerItemProxy */;
+		};
+		6284A06D056493BFD25005C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A2B4463D07F4377C671273DB /* BackgroundSync */;
+			targetProxy = 6A0950A0BE756FBEB4D9336A /* PBXContainerItemProxy */;
+		};
+		6E4138644C93A972F0D1668D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7B20F716B308559F293408B8 /* SecurityEngine */;
+			targetProxy = 8DAE7FBD642A4A62BF02A358 /* PBXContainerItemProxy */;
+		};
+		7B0D52DF519941135045EC53 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D34049DB3ECB9E595FE6717 /* Core */;
+			targetProxy = 06E5C517D22A688ABCC26331 /* PBXContainerItemProxy */;
+		};
+		856E7384EB2BEC93B8331C34 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A2B4463D07F4377C671273DB /* BackgroundSync */;
+			targetProxy = 9962896D8C58F300385CE451 /* PBXContainerItemProxy */;
+		};
+		9426C03E69A1B482389BABA4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D34049DB3ECB9E595FE6717 /* Core */;
+			targetProxy = 1448C4FD53FDC84583036427 /* PBXContainerItemProxy */;
+		};
+		9F9964BD76912432AAD96840 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D34049DB3ECB9E595FE6717 /* Core */;
+			targetProxy = B94FF102472BF16D18E91AAE /* PBXContainerItemProxy */;
+		};
+		B76C8E869706F9F95A80676E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0AEC1D6C8CF33C01505E5E82 /* GitEngine */;
+			targetProxy = FA70939764390355BB4D1D40 /* PBXContainerItemProxy */;
+		};
+		B9FFD2DC0D180CE788AFEF00 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7B20F716B308559F293408B8 /* SecurityEngine */;
+			targetProxy = 7D18388D8A6665B6BBEC4F66 /* PBXContainerItemProxy */;
+		};
+		C84A725BF49C9E96B5C23206 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D34049DB3ECB9E595FE6717 /* Core */;
+			targetProxy = 73791FA6545A1B3145760AF5 /* PBXContainerItemProxy */;
+		};
+		E284ED134EC5075E5F3702C0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB14F1D9A749B2E86968D751 /* Storage */;
+			targetProxy = 0493595419C41C9010DD16E2 /* PBXContainerItemProxy */;
+		};
+		E5DBC5F618A6D88BD21930E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0AEC1D6C8CF33C01505E5E82 /* GitEngine */;
+			targetProxy = CDCC889C3D93FB19661191B1 /* PBXContainerItemProxy */;
+		};
+		F4D2068A5C372A8D06772853 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB14F1D9A749B2E86968D751 /* Storage */;
+			targetProxy = E357A30938C721195F694655 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		18CFB2A3E9FF89ADF4FD99BE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WDKDNA9572;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.UITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = CommitSync;
+			};
+			name = Debug;
+		};
+		1D8B0516E8079792887D2AD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WDKDNA9572;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		1E7CBB871192970694883519 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WDKDNA9572;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.UITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = CommitSync;
+			};
+			name = Release;
+		};
+		2F217C904665342732DA4FE2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.SecurityEngine;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		3C9CAD265AF211E4B1474ABB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.Storage;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		6837AFB9CB0456FCAE2E64E9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.Storage;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		6F62A5616FD64FB46FB2FFD1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = WDKDNA9572;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.BackgroundSync;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		92FD138D1A6A3A650BCF22B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = WDKDNA9572;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		961553E1DF7AB988BD26B4C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.GitEngine;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		B55D8D3C452769D37A2BE353 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WDKDNA9572;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.Tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CommitSync.app/CommitSync";
+			};
+			name = Release;
+		};
+		B6E432B8F3F8BFCA318C294A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = WDKDNA9572;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		DB38069078E440E04C6C7277 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = WDKDNA9572;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.BackgroundSync;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		DE3FE2C56E7F9F54A950BA8E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WDKDNA9572;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		E3309B5BEA52D6B26053D968 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WDKDNA9572;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.Tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CommitSync.app/CommitSync";
+			};
+			name = Debug;
+		};
+		E833B9A171E55EF596E0613D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.Core;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		E86DED9C75C855F76121F333 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.GitEngine;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		ECD3148F38026713BE9BC80F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.SecurityEngine;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		F4EBE6354651FE2B29AF0714 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.vessy.CommitSync.Core;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		010FFAC317C5CAE9DD540F2D /* Build configuration list for PBXNativeTarget "CommitSyncUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				18CFB2A3E9FF89ADF4FD99BE /* Debug */,
+				1E7CBB871192970694883519 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1903B6D1F959942C7C06AE5F /* Build configuration list for PBXNativeTarget "Core" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F4EBE6354651FE2B29AF0714 /* Debug */,
+				E833B9A171E55EF596E0613D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		465D8C204B9B69D561349E1D /* Build configuration list for PBXNativeTarget "SecurityEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2F217C904665342732DA4FE2 /* Debug */,
+				ECD3148F38026713BE9BC80F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4E3E854FFBDFCA411C24A654 /* Build configuration list for PBXNativeTarget "CommitSyncTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E3309B5BEA52D6B26053D968 /* Debug */,
+				B55D8D3C452769D37A2BE353 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		571B6904804BE7208A30456E /* Build configuration list for PBXNativeTarget "Storage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6837AFB9CB0456FCAE2E64E9 /* Debug */,
+				3C9CAD265AF211E4B1474ABB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		77802A3E98D107BFC6CB4D58 /* Build configuration list for PBXNativeTarget "CommitSync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DE3FE2C56E7F9F54A950BA8E /* Debug */,
+				1D8B0516E8079792887D2AD2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		82B0EB5203C2F33E7D69FC3C /* Build configuration list for PBXNativeTarget "BackgroundSync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6F62A5616FD64FB46FB2FFD1 /* Debug */,
+				DB38069078E440E04C6C7277 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		96B6964E1975AEFFAF6A7F52 /* Build configuration list for PBXProject "CommitSync" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				92FD138D1A6A3A650BCF22B6 /* Debug */,
+				B6E432B8F3F8BFCA318C294A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DB9DFF187A399438C5B9016F /* Build configuration list for PBXNativeTarget "GitEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E86DED9C75C855F76121F333 /* Debug */,
+				961553E1DF7AB988BD26B4C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		50807E77940E286C4B40CF60 /* XCLocalSwiftPackageReference "Vendor/SwiftGitX" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Vendor/SwiftGitX;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D55991E5DDF6FB0694304F9D /* SwiftGitX */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftGitX;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 042D51EE46BAE0128813B7E9 /* Project object */;
+}

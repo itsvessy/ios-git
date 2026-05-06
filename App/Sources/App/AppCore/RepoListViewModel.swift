@@ -427,7 +427,7 @@ final class RepoListViewModel: ObservableObject {
                     kind: .success
                 )
             } else {
-                publish("Removed \(repo.displayName) from GitPhone.", kind: .success)
+                publish("Removed \(repo.displayName) from CommitSync.", kind: .success)
             }
 
             Task {

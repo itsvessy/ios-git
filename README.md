@@ -1,4 +1,4 @@
-# GitPhone
+# CommitSync
 
 iPhone-first Git-over-SSH clone/sync app scaffold (iOS 18+, SwiftUI, modular architecture).
 
@@ -34,7 +34,7 @@ xcodegen generate
 ## Build (local machine)
 
 ```bash
-xcodebuild -project GitPhone.xcodeproj -scheme GitPhone -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project CommitSync.xcodeproj -scheme CommitSync -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
 ```
 
 ## Notes
@@ -42,6 +42,7 @@ xcodebuild -project GitPhone.xcodeproj -scheme GitPhone -destination 'generic/pl
 - In restricted sandbox environments, SwiftData macro expansion can fail (`swift-plugin-server` malformed response). Build in normal Xcode/local host environment.
 - `GitEngine` clone/fetch/fast-forward behavior is in place via `SwiftGitX`.
 - Remaining git-engine gaps are listed below (notably real SSH host-key fingerprint wiring and integration coverage against real remotes).
+- First internal TestFlight alpha notes live in `TESTFLIGHT_NOTES.md`.
 
 ## Next Implementation Steps
 

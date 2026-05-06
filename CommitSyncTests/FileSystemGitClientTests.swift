@@ -348,7 +348,7 @@ final class FileSystemGitClientTests: XCTestCase {
 
     private func makeTemporaryDirectory() throws -> URL {
         let directory = FileManager.default.temporaryDirectory
-            .appendingPathComponent("gitphone-tests-\(UUID().uuidString)", isDirectory: true)
+            .appendingPathComponent("commitsync-tests-\(UUID().uuidString)", isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         return directory
     }

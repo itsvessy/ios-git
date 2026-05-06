@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import GitPhone
+@testable import CommitSync
 
 final class PersistenceStoreBootstrapTests: XCTestCase {
     private var tempRoot: URL!
@@ -27,7 +27,7 @@ final class PersistenceStoreBootstrapTests: XCTestCase {
             fallbackDirectory: tempRoot
         )
 
-        let storeDirectory = appSupport.appendingPathComponent("GitPhone", isDirectory: true)
+        let storeDirectory = appSupport.appendingPathComponent("CommitSync", isDirectory: true)
         XCTAssertFalse(fileManager.fileExists(atPath: storeDirectory.path))
 
         _ = try bootstrap.prepareStoreURL()
@@ -47,7 +47,7 @@ final class PersistenceStoreBootstrapTests: XCTestCase {
 
         let storeURL = try bootstrap.prepareStoreURL()
 
-        XCTAssertEqual(storeURL.path, appSupport.appendingPathComponent("GitPhone/default.store").path)
+        XCTAssertEqual(storeURL.path, appSupport.appendingPathComponent("CommitSync/default.store").path)
     }
 
     func testPrepareStoreURLIsIdempotent() throws {
@@ -79,7 +79,7 @@ final class PersistenceStoreBootstrapTests: XCTestCase {
                 return XCTFail("Unexpected error: \(error)")
             }
 
-            XCTAssertTrue(path.hasSuffix("not-a-directory/GitPhone"))
+            XCTAssertTrue(path.hasSuffix("not-a-directory/CommitSync"))
             XCTAssertTrue(error.localizedDescription.contains("Unable to create persistence directory"))
         }
     }

@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct GitPhoneApp: App {
+struct CommitSyncApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var container = AppContainer()
 

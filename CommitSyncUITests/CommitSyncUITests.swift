@@ -1,6 +1,6 @@
 import XCTest
 
-final class GitPhoneUITests: XCTestCase {
+final class CommitSyncUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
     }

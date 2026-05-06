@@ -17,7 +17,7 @@ struct UnlockGateView: View {
                         .font(.system(size: 52, weight: .semibold))
                         .foregroundStyle(AppColorTokens.accent)
 
-                    Text("GitPhone Locked")
+                    Text("CommitSync Locked")
                         .font(.title2.weight(.semibold))
 
                     Text("Authenticate to access repositories and SSH credentials.")

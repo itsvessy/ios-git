@@ -3,7 +3,7 @@ import Core
 import Foundation
 
 public final class BackgroundSyncCoordinator: @unchecked Sendable {
-    public static let taskIdentifier = "com.vessy.GitPhone.sync"
+    public static let taskIdentifier = "com.vessy.CommitSync.sync"
 
     private let gitClient: GitClient
     private let loadEligibleRepos: () async throws -> [RepoRecord]

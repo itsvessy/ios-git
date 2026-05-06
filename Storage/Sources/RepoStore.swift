@@ -10,7 +10,7 @@ public final class RepoStore: @unchecked Sendable {
     public init(container: ModelContainer) {
         self.container = container
         self.queue = DispatchQueue(
-            label: "com.vessy.GitPhone.repo-store",
+            label: "com.vessy.CommitSync.repo-store",
             qos: .userInitiated
         )
     }

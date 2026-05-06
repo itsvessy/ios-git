@@ -29,7 +29,7 @@ struct PersistenceStoreBootstrap {
 
     func prepareStoreURL() throws -> URL {
         let base = applicationSupportDirectory() ?? fallbackDirectory
-        let storeDirectory = base.appendingPathComponent("GitPhone", isDirectory: true)
+        let storeDirectory = base.appendingPathComponent("CommitSync", isDirectory: true)
 
         do {
             try fileManager.createDirectory(at: storeDirectory, withIntermediateDirectories: true)

@@ -92,7 +92,7 @@ struct RepoListView: View {
             titleVisibility: .visible,
             presenting: pendingDeleteRepo
         ) { repo in
-            Button("Remove from GitPhone", role: .destructive) {
+            Button("Remove from CommitSync", role: .destructive) {
                 Task {
                     await viewModel.deleteRepo(repo: repo, removeFiles: false)
                 }

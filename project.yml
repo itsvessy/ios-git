@@ -1,4 +1,4 @@
-name: GitPhone
+name: CommitSync
 options:
   minimumXcodeGenVersion: 2.38.0
 settings:
@@ -6,11 +6,12 @@ settings:
     SWIFT_VERSION: 6.0
     IPHONEOS_DEPLOYMENT_TARGET: 18.0
     DEVELOPMENT_TEAM: WDKDNA9572
+    TARGETED_DEVICE_FAMILY: 1
 packages:
   SwiftGitX:
     path: Vendor/SwiftGitX
 targets:
-  GitPhone:
+  CommitSync:
     type: application
     platform: iOS
     deploymentTarget: "18.0"
@@ -21,21 +22,27 @@ targets:
     info:
       path: App/Info.plist
       properties:
-        CFBundleDisplayName: GitPhone
+        CFBundleDisplayName: CommitSync
+        CFBundleShortVersionString: "0.1"
+        CFBundleVersion: "1"
         UILaunchStoryboardName: LaunchScreen
         UIApplicationSupportsIndirectInputEvents: true
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
+        ITSAppUsesNonExemptEncryption: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
         BGTaskSchedulerPermittedIdentifiers:
-          - com.vessy.GitPhone.sync
+          - com.vessy.CommitSync.sync
         NSFaceIDUsageDescription: Authenticate to unlock the app and access encrypted key passphrases.
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.CommitSync
         DEVELOPMENT_TEAM: WDKDNA9572
         CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: false
         SWIFT_EMIT_LOC_STRINGS: true
+        TARGETED_DEVICE_FAMILY: 1
     dependencies:
       - target: Core
       - target: Storage
@@ -51,8 +58,9 @@ targets:
       - path: Core/Sources
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.Core
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.CommitSync.Core
         GENERATE_INFOPLIST_FILE: true
+        TARGETED_DEVICE_FAMILY: 1
 
   Storage:
     type: framework
@@ -64,8 +72,9 @@ targets:
       - target: Core
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.Storage
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.CommitSync.Storage
         GENERATE_INFOPLIST_FILE: true
+        TARGETED_DEVICE_FAMILY: 1
 
   SecurityEngine:
     type: framework
@@ -77,8 +86,9 @@ targets:
       - target: Core
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.SecurityEngine
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.CommitSync.SecurityEngine
         GENERATE_INFOPLIST_FILE: true
+        TARGETED_DEVICE_FAMILY: 1
 
   GitEngine:
     type: framework
@@ -86,14 +96,17 @@ targets:
     deploymentTarget: "18.0"
     sources:
       - path: GitEngine/Sources
+      - path: GitEngine/Resources
+        buildPhase: resources
     dependencies:
       - target: Core
       - package: SwiftGitX
         product: SwiftGitX
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.GitEngine
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.CommitSync.GitEngine
         GENERATE_INFOPLIST_FILE: true
+        TARGETED_DEVICE_FAMILY: 1
 
   BackgroundSync:
     type: framework
@@ -106,17 +119,18 @@ targets:
       - target: GitEngine
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.BackgroundSync
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.CommitSync.BackgroundSync
         GENERATE_INFOPLIST_FILE: true
+        TARGETED_DEVICE_FAMILY: 1
 
-  GitPhoneTests:
+  CommitSyncTests:
     type: bundle.unit-test
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: GitPhoneTests
+      - path: CommitSyncTests
     dependencies:
-      - target: GitPhone
+      - target: CommitSync
       - target: Core
       - target: Storage
       - target: SecurityEngine
@@ -124,22 +138,24 @@ targets:
       - target: BackgroundSync
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.Tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.CommitSync.Tests
         DEVELOPMENT_TEAM: WDKDNA9572
         CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: true
+        TARGETED_DEVICE_FAMILY: 1
 
-  GitPhoneUITests:
+  CommitSyncUITests:
     type: bundle.ui-testing
     platform: iOS
     deploymentTarget: "18.0"
     sources:
-      - path: GitPhoneUITests
+      - path: CommitSyncUITests
     dependencies:
-      - target: GitPhone
+      - target: CommitSync
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.GitPhone.UITests
+        PRODUCT_BUNDLE_IDENTIFIER: com.vessy.CommitSync.UITests
         DEVELOPMENT_TEAM: WDKDNA9572
         CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: true
+        TARGETED_DEVICE_FAMILY: 1

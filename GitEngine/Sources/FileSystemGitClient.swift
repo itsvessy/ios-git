@@ -46,7 +46,7 @@ public actor FileSystemGitClient: GitClient {
 
         let credential = try await credentialProvider.credential(for: parsed.host, username: parsed.user)
 
-        return try await withSecurityScopedAccess(
+        return try await withSecurityScopedAccessAsync(
             directoryURL: request.targetDirectory,
             bookmarkData: request.targetDirectoryBookmark
         ) { accessibleRoot in
@@ -102,7 +102,7 @@ public actor FileSystemGitClient: GitClient {
 
     public func listLocalChanges(_ repo: RepoRecord) async throws -> [RepoLocalChange] {
         do {
-            return try await withRepositoryAccess(repo) { repository, _ in
+            return try withRepositoryAccess(repo) { repository, _ in
                 let statuses = try repository.status()
                 return self.makeLocalChanges(from: statuses)
             }
@@ -125,7 +125,7 @@ public actor FileSystemGitClient: GitClient {
 
     public func loadCommitIdentity(_ repo: RepoRecord) async throws -> RepoCommitIdentity? {
         do {
-            return try await withRepositoryAccess(repo) { repository, _ in
+            return try withRepositoryAccess(repo) { repository, _ in
                 try self.loadCommitIdentity(from: repository)
             }
         } catch let error as SwiftGitXError {
@@ -179,7 +179,7 @@ public actor FileSystemGitClient: GitClient {
     }
 
     private func syncUnlocked(_ repo: RepoRecord, trigger: SyncTrigger) async throws -> SyncResult {
-        return try await withSecurityScopedAccess(
+        return try await withSecurityScopedAccessAsync(
             directoryURL: URL(fileURLWithPath: repo.localPath, isDirectory: true),
             bookmarkData: repo.securityScopedBookmark
         ) { repositoryURL in
@@ -188,7 +188,7 @@ public actor FileSystemGitClient: GitClient {
             }
 
             if trigger == .background {
-                let deferMarker = repositoryURL.appendingPathComponent(".gitphone-defer-background")
+                let deferMarker = repositoryURL.appendingPathComponent(".commitsync-defer-background")
                 if self.fileManager.fileExists(atPath: deferMarker.path) {
                     return SyncResult(state: .networkDeferred, message: "Background sync deferred by policy.")
                 }
@@ -229,7 +229,7 @@ public actor FileSystemGitClient: GitClient {
         }
 
         do {
-            try await withRepositoryAccess(repo) { repository, _ in
+            try withRepositoryAccess(repo) { repository, _ in
                 try self.stagePaths(in: repository, paths: trimmedPaths)
             }
         } catch let error as SwiftGitXError {
@@ -239,7 +239,7 @@ public actor FileSystemGitClient: GitClient {
 
     private func stageAllUnlocked(_ repo: RepoRecord) async throws {
         do {
-            try await withRepositoryAccess(repo) { repository, _ in
+            try withRepositoryAccess(repo) { repository, _ in
                 let statuses = try repository.status()
                 let paths = self.makeLocalChanges(from: statuses).map(\.path)
                 guard !paths.isEmpty else {
@@ -260,7 +260,7 @@ public actor FileSystemGitClient: GitClient {
         }
 
         do {
-            try await withRepositoryAccess(repo) { repository, _ in
+            try withRepositoryAccess(repo) { repository, _ in
                 try repository.config.set("user.name", to: name)
                 try repository.config.set("user.email", to: email)
             }
@@ -276,22 +276,8 @@ public actor FileSystemGitClient: GitClient {
         }
 
         do {
-            return try await withRepositoryAccess(repo) { repository, _ in
-                guard try self.loadCommitIdentity(from: repository) != nil else {
-                    throw RepoError.commitIdentityMissing
-                }
-
-                let statuses = try repository.status()
-                guard self.hasStagedChanges(statuses) else {
-                    throw RepoError.nothingToCommit
-                }
-
-                let committed = try repository.commit(message: trimmedMessage)
-                return RepoCommitResult(
-                    commitID: committed.id.hex,
-                    message: trimmedMessage,
-                    committedAt: Date()
-                )
+            return try withRepositoryAccess(repo) { repository, _ in
+                try self.commit(in: repository, message: trimmedMessage)
             }
         } catch let error as SwiftGitXError {
             throw map(error: error)
@@ -304,7 +290,7 @@ public actor FileSystemGitClient: GitClient {
         let credential = try await credentialProvider.credential(for: parsed.host, username: parsed.user)
 
         do {
-            return try await withRepositoryAccess(repo) { repository, _ in
+            return try await withRepositoryAccessAsync(repo) { repository, _ in
                 try await self.withSSHAuthentication(credential: credential) { authentication in
                     try await repository.push(
                         remote: repository.remote["origin"],
@@ -325,7 +311,7 @@ public actor FileSystemGitClient: GitClient {
 
     private func discardLocalChangesUnlocked(_ repo: RepoRecord) async throws {
         do {
-            try await withRepositoryAccess(repo) { repository, _ in
+            try withRepositoryAccess(repo) { repository, _ in
                 if let currentBranch = try? repository.branch.current,
                    let headCommit = currentBranch.target as? Commit {
                     try repository.reset(to: headCommit, mode: .hard)
@@ -348,7 +334,7 @@ public actor FileSystemGitClient: GitClient {
         let credential = try await credentialProvider.credential(for: parsed.host, username: parsed.user)
 
         do {
-            return try await withRepositoryAccess(repo) { repository, _ in
+            return try await withRepositoryAccessAsync(repo) { repository, _ in
                 try await self.withSSHAuthentication(credential: credential) { authentication in
                     try await repository.fetch(
                         remote: repository.remote["origin"],
@@ -389,9 +375,32 @@ public actor FileSystemGitClient: GitClient {
 
     private func withRepositoryAccess<T: Sendable>(
         _ repo: RepoRecord,
+        operation: (Repository, URL) throws -> T
+    ) throws -> T {
+        try withSecurityScopedAccessSync(
+            directoryURL: URL(fileURLWithPath: repo.localPath, isDirectory: true),
+            bookmarkData: repo.securityScopedBookmark
+        ) { repositoryURL in
+            guard self.fileManager.fileExists(atPath: repositoryURL.path) else {
+                throw RepoError.ioFailure("Repository directory missing.")
+            }
+
+            let repository: Repository
+            do {
+                repository = try Repository.open(at: repositoryURL)
+            } catch let error as SwiftGitXError {
+                throw self.map(error: error)
+            }
+
+            return try operation(repository, repositoryURL)
+        }
+    }
+
+    private func withRepositoryAccessAsync<T: Sendable>(
+        _ repo: RepoRecord,
         operation: (Repository, URL) async throws -> T
     ) async throws -> T {
-        try await withSecurityScopedAccess(
+        try await withSecurityScopedAccessAsync(
             directoryURL: URL(fileURLWithPath: repo.localPath, isDirectory: true),
             bookmarkData: repo.securityScopedBookmark
         ) { repositoryURL in
@@ -408,6 +417,24 @@ public actor FileSystemGitClient: GitClient {
 
             return try await operation(repository, repositoryURL)
         }
+    }
+
+    private func commit(in repository: Repository, message: String) throws -> RepoCommitResult {
+        guard try loadCommitIdentity(from: repository) != nil else {
+            throw RepoError.commitIdentityMissing
+        }
+
+        let statuses = try repository.status()
+        guard hasStagedChanges(statuses) else {
+            throw RepoError.nothingToCommit
+        }
+
+        let committed = try repository.commit(message: message)
+        return RepoCommitResult(
+            commitID: committed.id.hex,
+            message: message,
+            committedAt: Date()
+        )
     }
 
     private func loadCommitIdentity(from repository: Repository) throws -> RepoCommitIdentity? {
@@ -713,7 +740,7 @@ public actor FileSystemGitClient: GitClient {
     private func writeTemporaryPrivateKey(_ privateKey: Data) throws -> URL {
         let keyString = try renderPrivateKey(privateKey)
         let directory = fileManager.temporaryDirectory
-            .appendingPathComponent("gitphone-ssh", isDirectory: true)
+            .appendingPathComponent("commitsync-ssh", isDirectory: true)
         try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
 
         let fileURL = directory.appendingPathComponent(UUID().uuidString, isDirectory: false)
@@ -766,7 +793,7 @@ public actor FileSystemGitClient: GitClient {
         privateAndPublic.append(seed)
         privateAndPublic.append(publicKey)
         privateBlob.append(encodeSSHString(privateAndPublic))
-        privateBlob.append(encodeSSHString(Data("gitphone".utf8)))
+        privateBlob.append(encodeSSHString(Data("commitsync".utf8)))
 
         var pad: UInt8 = 1
         while privateBlob.count % 8 != 0 {
@@ -799,7 +826,41 @@ public actor FileSystemGitClient: GitClient {
         return output
     }
 
-    private func withSecurityScopedAccess<T: Sendable>(
+    private func withSecurityScopedAccessSync<T: Sendable>(
+        directoryURL: URL,
+        bookmarkData: Data?,
+        operation: (URL) throws -> T
+    ) throws -> T {
+        let resolvedURL: URL
+        var hasScopedAccess = false
+
+        if let bookmarkData {
+            var isStale = false
+            do {
+                resolvedURL = try URL(
+                    resolvingBookmarkData: bookmarkData,
+                    options: [.withoutUI],
+                    relativeTo: nil,
+                    bookmarkDataIsStale: &isStale
+                )
+            } catch {
+                throw RepoError.ioFailure("Could not resolve folder permission bookmark.")
+            }
+            _ = isStale
+            hasScopedAccess = resolvedURL.startAccessingSecurityScopedResource()
+        } else {
+            resolvedURL = directoryURL
+        }
+
+        defer {
+            if hasScopedAccess {
+                resolvedURL.stopAccessingSecurityScopedResource()
+            }
+        }
+        return try operation(resolvedURL)
+    }
+
+    private func withSecurityScopedAccessAsync<T: Sendable>(
         directoryURL: URL,
         bookmarkData: Data?,
         operation: (URL) async throws -> T

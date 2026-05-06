@@ -107,7 +107,7 @@ struct SSHKeysManagementView: View {
                 pendingDelete = nil
             }
         } message: { key in
-            Text("This removes key \(key.label) from GitPhone and deletes its local keychain material.")
+            Text("This removes key \(key.label) from CommitSync and deletes its local keychain material.")
         }
     }
 
